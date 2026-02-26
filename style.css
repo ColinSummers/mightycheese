@@ -1,0 +1,313 @@
+/* ============================================
+   Mighty Cheese - Modern Theme
+   ============================================ */
+
+:root {
+  --gold: #d4a017;
+  --gold-light: #f0d060;
+  --gold-dark: #b8860b;
+  --cream: #faf6ed;
+  --cream-dark: #f0e8d4;
+  --text: #2c2416;
+  --text-light: #5a4e3c;
+  --white: #ffffff;
+  --shadow: rgba(44, 36, 22, 0.12);
+  --radius: 6px;
+  --max-width: 960px;
+  --nav-height: 56px;
+}
+
+/* Reset & Base */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--cream);
+}
+
+img { max-width: 100%; height: auto; }
+a { color: var(--gold-dark); }
+a:hover { color: var(--gold); }
+
+/* ============================================
+   Navbar
+   ============================================ */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--text);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.navbar-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  height: var(--nav-height);
+}
+
+.navbar-brand {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.navbar-brand:hover { color: var(--white); }
+
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  color: var(--cream-dark);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-radius: var(--radius);
+  transition: background 0.15s, color 0.15s;
+}
+.nav-links a:hover,
+.nav-links .active a {
+  background: var(--gold-dark);
+  color: var(--white);
+}
+
+/* Hamburger toggle (CSS-only) */
+.nav-toggle { display: none; }
+.nav-toggle-label {
+  display: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+.nav-toggle-label span,
+.nav-toggle-label span::before,
+.nav-toggle-label span::after {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--cream-dark);
+  position: relative;
+  transition: transform 0.3s;
+}
+.nav-toggle-label span::before,
+.nav-toggle-label span::after {
+  content: "";
+  position: absolute;
+}
+.nav-toggle-label span::before { top: -7px; }
+.nav-toggle-label span::after { top: 7px; }
+
+@media (max-width: 700px) {
+  .nav-toggle-label { display: block; }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    background: var(--text);
+    padding: 0.5rem 1rem 1rem;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  .nav-toggle:checked ~ .nav-links { display: flex; }
+
+  .nav-toggle:checked ~ .nav-toggle-label span { background: transparent; }
+  .nav-toggle:checked ~ .nav-toggle-label span::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+  .nav-toggle:checked ~ .nav-toggle-label span::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+}
+
+/* ============================================
+   Header banner
+   ============================================ */
+.site-header {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-light) 100%);
+  color: var(--white);
+  text-align: center;
+  padding: 2.5rem 1rem 2rem;
+}
+.site-header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.site-header .subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* ============================================
+   Main content
+   ============================================ */
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+main h2 {
+  font-size: 1.6rem;
+  color: var(--gold-dark);
+  border-bottom: 2px solid var(--gold-light);
+  padding-bottom: 0.3rem;
+  margin: 0 0 1.2rem;
+}
+
+main h3 {
+  font-size: 1.2rem;
+  color: var(--text);
+  margin: 1.5rem 0 0.5rem;
+}
+
+main p { margin: 0 0 1rem; }
+
+/* Callout / sidebar content */
+.callout-content {
+  background: var(--cream-dark);
+  border-left: 4px solid var(--gold);
+  padding: 1rem 1.25rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 1.5rem;
+}
+
+.callout-content h4 {
+  margin: 0 0 0.5rem;
+  color: var(--gold-dark);
+}
+
+/* Images */
+.ImageElement {
+  margin: 1rem 0;
+}
+
+.ImageElement img {
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* Photo navigation (gallery pages) */
+.photo-navigation {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--cream-dark);
+  border-radius: var(--radius);
+}
+
+.photo-navigation a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ============================================
+   Gallery grid (index pages with thumbnails)
+   ============================================ */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.gallery-item {
+  text-align: center;
+}
+
+.gallery-item a {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.gallery-item img {
+  border-radius: var(--radius);
+  box-shadow: 0 1px 4px var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: block;
+  margin: 0 auto;
+}
+
+.gallery-item img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* ============================================
+   Index listings (headaches, etc.)
+   ============================================ */
+.index-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.index-list li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--cream-dark);
+}
+
+.index-list li:last-child { border-bottom: none; }
+
+.index-list a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.index-list .summary {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+footer {
+  background: var(--text);
+  color: var(--cream-dark);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: 0.85rem;
+  margin-top: 2rem;
+}
+
+footer a { color: var(--gold-light); }
+
+/* ============================================
+   Utility
+   ============================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
