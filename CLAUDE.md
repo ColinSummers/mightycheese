@@ -20,7 +20,7 @@ To preview locally: `python3 -m http.server`
 - **migraines/** — Additional headache content with yearly subdirectories
 - **pog/** — Photo gallery collections (the_pawlet_box/, the_pawlet_box_2/, pawlet/) with CSS grid thumbnails
 - **damage/** — Additional content section
-- **_Media/** — Site-wide images (pawlet thumbnails, cheese photos, etc.)
+- **media/** — Site-wide images (pawlet thumbnails, cheese photos, etc.)
 - **_tools/** — Build/migration scripts (modernize.py)
 
 ## Conventions
