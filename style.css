@@ -183,7 +183,7 @@ main h3 {
   margin: 1.5rem 0 0.5rem;
 }
 
-main p { margin: 0 0 1rem; }
+main p { margin: 0 0 1em; }
 
 /* Callout / sidebar content */
 .callout-content {

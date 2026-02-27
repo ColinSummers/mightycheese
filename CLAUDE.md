@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Static HTML website for mightycheese.com, a personal site by Colin Summers. Originally built with Sandvox (Mac website builder), modernized in 2026 to HTML5 with responsive CSS. Hosted on Cloudflare Pages.
+Static HTML website for mightycheese.com, a personal site by Colin Summers. Originally built with Sandvox (Mac website builder), modernized in 2026 to HTML5 with responsive CSS. Hosted on GitHub Pages.
 
 ## Development
 
@@ -16,12 +16,10 @@ To preview locally: `python3 -m http.server`
 
 - **style.css** — Single site-wide stylesheet (CSS variables, flexbox layout, responsive, CSS-only hamburger menu)
 - **Root HTML files** — Main site pages (index.html, what.html, who.html, why.html, and ~27 other content pages)
-- **headaches/** — Blog-like archive (2004–2007) with yearly subdirectories and RSS feeds (index.xml)
-- **migraines/** — Additional headache content with yearly subdirectories
+- **cts/** — Colin's personal pages (accessible via mightycheese.com/cts/), with sub-sections: programming, damage, headaches, migraines
 - **pog/** — Photo gallery collections (the_pawlet_box/, the_pawlet_box_2/, pawlet/) with CSS grid thumbnails
-- **damage/** — Additional content section
 - **media/** — Site-wide images (pawlet thumbnails, cheese photos, etc.)
-- **_tools/** — Build/migration scripts (modernize.py)
+- **CNAME** — GitHub Pages custom domain config; tells GitHub to serve this repo as mightycheese.com. Do not delete.
 
 ## Conventions
 
@@ -35,4 +33,4 @@ To preview locally: `python3 -m http.server`
 
 ## Deployment
 
-Cloudflare Pages — no build step needed. Just serve the root directory as static files.
+GitHub Pages — no build step needed. Just push to main and GitHub serves the root directory as static files.
