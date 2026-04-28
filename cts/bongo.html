@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bongo | Mighty Cheese</title>
+  <meta name="author" content="Colin Summers" />
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .bongo-screenshot {
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      margin: 1.5rem 0;
+    }
+    .download-button {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.75rem 2rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      margin: 1.5rem 0;
+      box-shadow: 0 2px 8px var(--shadow);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .download-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px var(--shadow);
+      color: var(--white);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="navbar-brand" href="../">MightyCheese</a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+      <label for="nav-toggle" class="nav-toggle-label"></label>
+      <ul class="nav-links">
+          <li><a href="../what.html">What</a></li>
+          <li><a href="../who.html">Who</a></li>
+          <li><a href="../why.html">Why</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <h2>Have I lost my little mind? Maybe.</h2>
+
+    <img src="../media/top.png" alt="Bongo startup screen" class="bongo-screenshot" />
+
+    <p>But if you are on the Jungle then you can download this app. Until I get it "notarized" you'll have to right-click &gt; Open the first time.</p>
+
+    <a href="../media/Bongo.zip" class="download-button">Download Bongo</a>
+
+    <p>Because sometimes you might want to stay out of your inbox and just go back in the Jungle. So now you have a Bongo to do it with. (There's an option to shift to the Princeton Graphics pale orange on black instead of green. You can make the font larger or smaller.)</p>
+
+    <img src="../media/bottom.png" alt="Bongo exit screen" class="bongo-screenshot" />
+
+  </main>
+  <footer>
+    <p>Copyright Colin Summers 2006 and other years.</p>
+  </footer>
+</body>
+</html>
