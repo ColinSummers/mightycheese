@@ -16,9 +16,9 @@ To preview locally: `python3 -m http.server`
 
 - **style.css** — Single site-wide stylesheet (CSS variables, flexbox layout, responsive, CSS-only hamburger menu)
 - **Root HTML files** — Main site pages (index.html, what.html, who.html, why.html, and ~27 other content pages)
-- **cts/** — Colin's personal pages (accessible via mightycheese.com/cts/), with sub-sections: programming, damage, headaches, migraines
+- **cts/** — Colin's personal pages (accessible via mightycheese.com/cts/), with sub-sections: programming, damage, headaches, migraines. Includes unlisted Bongo app download page at cts/bongo.html
 - **pog/** — Photo gallery collections (the_pawlet_box/, the_pawlet_box_2/, pawlet/) with CSS grid thumbnails
-- **media/** — Site-wide images (pawlet thumbnails, cheese photos, etc.)
+- **media/** — Site-wide images (pawlet thumbnails, cheese photos, etc.), Bongo app screenshots (top.png, bottom.png), and Bongo.zip download
 - **CNAME** — GitHub Pages custom domain config; tells GitHub to serve this repo as mightycheese.com. Do not delete.
 
 ## Conventions
