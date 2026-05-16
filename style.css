@@ -185,6 +185,18 @@ main h3 {
 
 main p { margin: 0 0 1em; }
 
+/* Blog entries */
+.blog-entry {
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin: 0 0 2em;
+}
+
+.blog-entry h3 {
+  margin-top: 0;
+}
+
 /* Callout / sidebar content */
 .callout-content {
   background: var(--cream-dark);

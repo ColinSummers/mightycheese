@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mighty Cheese | Volt a Day | Click to Upgrade</title>
+  <meta name="author" content="Colin Summers" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="navbar-brand" href="../../../">MightyCheese</a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+      <label for="nav-toggle" class="nav-toggle-label"></label>
+      <ul class="nav-links">
+          <li><a href="../../../what.html">What</a></li>
+          <li><a href="../../../who.html">Who</a></li>
+          <li><a href="../../../why.html">Why</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+<h2><a href="../../">cts</a> | <a href="../">Volt a Day</a> | Click to Upgrade</h2>
+<p style="color: #5a4e3c; font-size: 0.9em;">December 17, 2010</p>
+<p>
+  <a href="../media/2010/12/screen-shot-2010-12-17-at-6-38-15-pm.jpg"><img class="size-thumbnail wp-image-485" title="Screen shot 2010-12-17 at 6.38.15 PM" src="../media/2010/12/screen-shot-2010-12-17-at-6-38-15-pm.jpg" alt="" width="150" height="70" /></a>
+  </p>
+<p>
+  On December 4 in Torrance the Southern California CAB members had a great meet up at GM's facility in Torrance. That's <a href="http://www.gmvoltcab.com/journal/2010/12/6/los-angeles-cab-meet-up-ii.html">written up on the GM Volt CAB site</a>. While I was there one of the Volt engineers said, "We'll see you this week to upgrade the software in your car." That was exciting news, especially since the only problems I had with the car were with the center stack (entertainment, navigation and climate control with the touch-sensitive button area and the touch screen).
+  </p>
+<p>
+  On Monday we traded a few calls and I worked through my GM contact (Scott) to figure out when they would be there. He warned me that it would be a couple hours of work on the car. "It's taking them longer than they initially thought."
+  </p>
+<p>
+  Longer turned out to be about two hours, but it was like a two hour movie for me. Very entertaining and fascinating. Trent and Lane showed up and they are both engineers on the power train and in the validation (testing) program. They work on the Volt, but they have worked on other cars, too.
+  </p>
+<p>
+  I learned a lot. If it hadn't been a school night I would have taken them to dinner to learn more.
+  </p>
+<p>
+  There are over a hundred micro controllers in the Volt. Famously, there are ten million lines of code in the car. Being a computer guy, I figured that the controllers were all wired together into a local area network with something like ethernet and they all talked to one another. It's a good thing I'm not building cars, that idea would be a disaster. A single point of failure for the communication between critical pieces is not a good idea.
+  </p>
+<p>
+  (My airplane has a sophisticated set of avionics in it, made by Garmin, the same people that make the little GPS unit that sits on your dashboard. There are a bunch of pieces in the system (a transponder, a set of communication radios, a set of navigation radios, the GPS receivers, the two screens in the front of the plane, and so on). They all talk to one another (so that the GPS can tell the screen in the front where to draw the little plane on the moving map). They talk over ethernet, but there are two networks. And it appears to be wired in some decentralized way, so that if the primary ethernet between two boxes goes down, the communication fails over to the backup connection, but if the backup fails between the <em>next</em> two boxes it knows to switch back to the primary. All very clever and similar to the way the Internet is designed.)
+  </p>
+<p>
+  There are three networks in the Volt, of varying speeds and importance. They are based on the <a href="http://en.wikipedia.org/wiki/Controller_area_network">CAN standard</a> that Bosch (they invented ABS brakes) came up with back in 1983. So, yes, ancient technology. Again, in the automobile industry you stick with things that work when you can.
+  </p>
+<p>
+  The brake control unit is a micro-controller. I'm guessing, but it probably has actuators that trigger the ABS flutter when it is deemed necessary (braking requested, one or more wheels not turning, which means the car is skidding). And it is, essentially, brake-by-wire. You press on the brake pedal and the controller decides how much braking force to apple to the hydraulics which actually perform the braking action. In the Volt, braking is more complex (like nearly everything in the Volt). There is a unit which can use regenerative resistance to put energy from the braking action back into the batteries. That's not necessary (or, I imagine, possible) if the batteries are full. And it isn't efficient below 5mph. So there's a transition from fiction braking + regenerative braking to just friction braking. There were complaints from the captured test fleet drivers about the transition, that they felt too much pedal pressure was required for that last bit of stopping the car. (It is, in fact, one of <a href="http://gm-volt.com/2010/11/29/living-with-the-chevy-volt-the-first-1300-miles/">Lyle Dennis' few complaints</a>, as he was pulling into his parking spot at work he felt like he was going to hit the wall and had to stomp on the brakes.)
+  </p>
+<p>
+  So the programmers tweaked the code that decides on how much braking to apply giving a particular pedal pressure. After the software upgrade it was <em>instantly </em>noticeable. The very first stop I make. It was like the brake fluid was a little low in the system and they topped it off.
+  </p>
+<p>
+  That's astonishing, because it is a new age in vehicles. We're just seeing the beginning of it, but it means that ultimately you could have driver profiles (which were set depending on which key fob had sat down in the drive seat), where the braking, acceleration, and a hundred other parameters were all personalized. For now, they are trying to please a large population and hit a sweet spot, but there's no reason it couldn't be tuned to an individual. (Well, there is, but that's covered in a future post about liberty and government intervention killing innovation.)
+  </p>
+<p>
+  There is one place where you can connect to all three networks, which is through the OBDIII port. That's an industry standard On Board Diagnostics port (mandated by the federal government). For the software update just before the CAB cars were delivered, the engineers had to connect a laptop to that port, and download the code update for each micro-controller separately. And before the update was sent to the controller the laptop had to say, "Hey! Everyone on this network! Quiet, I have to speak to the brake controller." After the update the laptop would announce that traffic was allowed again. Then the engineer moved on to the next update necessary.
+  </p>
+<p>
+  When the two guys arrived  to update my software, they had a little blue box with them about the size of a carton of cigarettes. It plugged directly into the OBD port and sat for an hour or so buzzing through the updates, happily sending them over active networks and logging any errors it encountered along the way. It was a set-it-and-forget-it piece of hardware, clearly the sort of item that GM wants to send out to factory-authorized service centers.
+  </p>
+<p>
+  While the software was updating, you could occasionally hear the car going through hardware cycling. When the brake controller updated you could hear the ABS trigger and some sort of pump run for a little bit. Part of the update concerns the out-of-spec parameters. As the CTF gains miles (hundreds of cars, thousands of miles) the validation team gathers the data from the cars. They can look at the data and say, "Ah, there are no complaints from the driver and the brakes reported chatter at 12mph. So that's a spurious report and we need to adjust the measurement that we use for 'chatter.'" Downloaded to my car was code that had a whole bunch of corrected parameters that would keep warning lights and error messages from reporting false positives.
+  </p>
+<p>
+  When the car was completely happy with the downloads, the two engineers took it for a test spin (with me riding shotgun). Everything was working perfectly so they ended their long day (it was 8pm before they were headed out) with a drive back down toward Torrance.
+  </p>
+<p>
+  &nbsp;
+  </p>
+<p>
+  The next update was a little easier. I received an email letting me know that there was a "recall notice" on the car to update the software for the climate control. Since the car is not yet shipping to retail customers, I don't believe there was actually a recall notice issued, I think GM was testing their process for doing this sort of update. The email said that I should have the car in a safe place, turned off and not plugged in, and I should call OnStar. I was at home, so I gave them a call. The OnStar operators are <em>all</em> incredibly friendly and helpful, and this one was no exception. She confirmed that the car was off, not charging, and had at least a 50% charge. She said the update would take about half an hour and she'd call me back when it was done. Twenty-five minutes later the phone rang and she said it was done.
+  </p>
+<p>
+  I haven't noticed any difference with that update, but it demonstrated how easy it would be for GM to update software for the car as they continue their development of the platform. (Gathering the data can't be done over the OnStar network because the files are too large; I asked about that.)
+  </p>
+
+  </main>
+  <footer>
+    <p>Copyright Colin Summers 2006 and other years.</p>
+  </footer>
+</body>
+</html>
