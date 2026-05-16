@@ -21,13 +21,10 @@
     </div>
   </nav>
   <main>
-<h2><a href="../../">cts</a> | <a href="../">Volt a Day</a> | Click to Upgrade</h2>
-<p style="color: #5a4e3c; font-size: 0.9em;">December 17, 2010</p>
+<h2><a href="../../">cts</a> | <a href="../">Volt a Day</a> | Click to Upgrade <span class="post-date">December 17, 2010</span></h2>
+<figure class="align-left"><a href="../../../media/voltaday/2010/12/screen-shot-2010-12-17-at-6-38-15-pm.jpg"><img class="size-thumbnail wp-image-485" title="Screen shot 2010-12-17 at 6.38.15 PM" src="../../../media/voltaday/2010/12/screen-shot-2010-12-17-at-6-38-15-pm.jpg" alt="" width="150" height="70" /></a></figure>
 <p>
-  <a href="../media/2010/12/screen-shot-2010-12-17-at-6-38-15-pm.jpg"><img class="size-thumbnail wp-image-485" title="Screen shot 2010-12-17 at 6.38.15 PM" src="../media/2010/12/screen-shot-2010-12-17-at-6-38-15-pm.jpg" alt="" width="150" height="70" /></a>
-  </p>
-<p>
-  On December 4 in Torrance the Southern California CAB members had a great meet up at GM's facility in Torrance. That's <a href="http://www.gmvoltcab.com/journal/2010/12/6/los-angeles-cab-meet-up-ii.html">written up on the GM Volt CAB site</a>. While I was there one of the Volt engineers said, "We'll see you this week to upgrade the software in your car." That was exciting news, especially since the only problems I had with the car were with the center stack (entertainment, navigation and climate control with the touch-sensitive button area and the touch screen).
+  On December 4 in Torrance the Southern California CAB members had a great meet up at GM's facility in Torrance. That's <a href="#dead-5685dbe2" class="dead-link">written up on the GM Volt CAB site</a>. While I was there one of the Volt engineers said, "We'll see you this week to upgrade the software in your car." That was exciting news, especially since the only problems I had with the car were with the center stack (entertainment, navigation and climate control with the touch-sensitive button area and the touch screen).
   </p>
 <p>
   On Monday we traded a few calls and I worked through my GM contact (Scott) to figure out when they would be there. He warned me that it would be a couple hours of work on the car. "It's taking them longer than they initially thought."
@@ -45,10 +42,10 @@
   (My airplane has a sophisticated set of avionics in it, made by Garmin, the same people that make the little GPS unit that sits on your dashboard. There are a bunch of pieces in the system (a transponder, a set of communication radios, a set of navigation radios, the GPS receivers, the two screens in the front of the plane, and so on). They all talk to one another (so that the GPS can tell the screen in the front where to draw the little plane on the moving map). They talk over ethernet, but there are two networks. And it appears to be wired in some decentralized way, so that if the primary ethernet between two boxes goes down, the communication fails over to the backup connection, but if the backup fails between the <em>next</em> two boxes it knows to switch back to the primary. All very clever and similar to the way the Internet is designed.)
   </p>
 <p>
-  There are three networks in the Volt, of varying speeds and importance. They are based on the <a href="http://en.wikipedia.org/wiki/Controller_area_network">CAN standard</a> that Bosch (they invented ABS brakes) came up with back in 1983. So, yes, ancient technology. Again, in the automobile industry you stick with things that work when you can.
+  There are three networks in the Volt, of varying speeds and importance. They are based on the <a href="http://en.wikipedia.org/wiki/Controller_area_network" target="_blank" rel="noopener">CAN standard</a> that Bosch (they invented ABS brakes) came up with back in 1983. So, yes, ancient technology. Again, in the automobile industry you stick with things that work when you can.
   </p>
 <p>
-  The brake control unit is a micro-controller. I'm guessing, but it probably has actuators that trigger the ABS flutter when it is deemed necessary (braking requested, one or more wheels not turning, which means the car is skidding). And it is, essentially, brake-by-wire. You press on the brake pedal and the controller decides how much braking force to apple to the hydraulics which actually perform the braking action. In the Volt, braking is more complex (like nearly everything in the Volt). There is a unit which can use regenerative resistance to put energy from the braking action back into the batteries. That's not necessary (or, I imagine, possible) if the batteries are full. And it isn't efficient below 5mph. So there's a transition from fiction braking + regenerative braking to just friction braking. There were complaints from the captured test fleet drivers about the transition, that they felt too much pedal pressure was required for that last bit of stopping the car. (It is, in fact, one of <a href="http://gm-volt.com/2010/11/29/living-with-the-chevy-volt-the-first-1300-miles/">Lyle Dennis' few complaints</a>, as he was pulling into his parking spot at work he felt like he was going to hit the wall and had to stomp on the brakes.)
+  The brake control unit is a micro-controller. I'm guessing, but it probably has actuators that trigger the ABS flutter when it is deemed necessary (braking requested, one or more wheels not turning, which means the car is skidding). And it is, essentially, brake-by-wire. You press on the brake pedal and the controller decides how much braking force to apple to the hydraulics which actually perform the braking action. In the Volt, braking is more complex (like nearly everything in the Volt). There is a unit which can use regenerative resistance to put energy from the braking action back into the batteries. That's not necessary (or, I imagine, possible) if the batteries are full. And it isn't efficient below 5mph. So there's a transition from fiction braking + regenerative braking to just friction braking. There were complaints from the captured test fleet drivers about the transition, that they felt too much pedal pressure was required for that last bit of stopping the car. (It is, in fact, one of <a href="http://gm-volt.com/2010/11/29/living-with-the-chevy-volt-the-first-1300-miles/" target="_blank" rel="noopener">Lyle Dennis' few complaints</a>, as he was pulling into his parking spot at work he felt like he was going to hit the wall and had to stomp on the brakes.)
   </p>
 <p>
   So the programmers tweaked the code that decides on how much braking to apply giving a particular pedal pressure. After the software upgrade it was <em>instantly </em>noticeable. The very first stop I make. It was like the brake fluid was a little low in the system and they topped it off.
@@ -78,6 +75,15 @@
   I haven't noticed any difference with that update, but it demonstrated how easy it would be for GM to update software for the car as they continue their development of the platform. (Gathering the data can't be done over the OnStar network because the files are too large; I asked about that.)
   </p>
 
+      <nav class="post-nav"><a href="so-far.html" class="post-nav-prev">&larr; So Far</a><a href="the-nest.html" class="post-nav-next">the Nest &rarr;</a></nav>
+  <div id="dead-5685dbe2" class="broken-link-dialog">
+  <div class="broken-link-dialog-box">
+    <p><strong>Broken Link</strong></p>
+    <p>The web is fragile and this link is no longer pointing to the correct content.</p>
+    <p class="dead-url">http://www.gmvoltcab.com/journal/2010/12/6/los-angeles-cab-meet-up-ii.html</p>
+    <a href="#" class="dismiss">OK</a>
+  </div>
+</div>
   </main>
   <footer>
     <p>Copyright Colin Summers 2006 and other years.</p>
