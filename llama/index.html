@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mighty Cheese | The llamas are not going to eat your lunch</title>
+<link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&family=Storyscript&display=swap" rel="stylesheet">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #2b1810;
+    color: #9bd4d6;
+    font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6vh 8.4vw;
+    box-sizing: border-box;
+  }
+  main {
+    width: 100%;
+    max-width: 1400px;
+  }
+  h1 {
+    font-family: 'Charmonman', 'Quicksand', cursive;
+    font-weight: 700;
+    font-size: clamp(2.34rem, 8.1vw, 8.1rem);
+    line-height: 1.05;
+    margin: 0 0 0.8em 0;
+    letter-spacing: 0;
+  }
+  h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+  p {
+    font-family: 'Storyscript', 'Quicksand', cursive;
+    font-weight: 400;
+    font-size: clamp(1.7rem, 4.4vw, 4.2rem);
+    line-height: 1.35;
+    margin: 0 12.5%;
+  }
+  p a {
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.18;
+    transition: opacity 0.55s ease, text-shadow 0.55s ease;
+  }
+  p a.lit {
+    opacity: 1;
+    text-shadow: 0 0 18px rgba(155, 212, 214, 0.35);
+  }
+  p a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.08em;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1><span>the llamas are not</span><span>going to eat your lunch</span></h1>
+  <p>
+    <a href="#">It's not A.I.</a>
+    <a href="history.html">Know your history.</a>
+    <a href="#">You're not a luddite.</a>
+    <a href="#">Greedy people are selling snake oil.</a>
+    <a href="#">It is useful for non-creative, repetitive tasks.</a>
+  </p>
+</main>
+<script>
+  window.addEventListener('load', () => {
+    const links = document.querySelectorAll('p a');
+    links.forEach((a, i) => setTimeout(() => a.classList.add('lit'), 400 + i * 550));
+  });
+</script>
+</body>
+</html>
