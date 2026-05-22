@@ -17,8 +17,10 @@ up by key at click time.
 from __future__ import annotations
 
 import html
+import math
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -26,11 +28,137 @@ LLAMA = ROOT / "llama"
 
 FN_DEF = re.compile(r"^\[\^([\w-]+)\]:[ \t]*(.*)$", re.MULTILINE)
 FN_REF = re.compile(r"\[\^([\w-]+)\]")
+TIMES = re.compile(r"\{\{times:\s*([^}]+?)\s*\}\}")
+STARTERS = re.compile(r"\{\{starters:\s*top10\s*\}\}")
+
+PALETTE_TOP10 = [
+    "#b8423a", "#e07a35", "#c89a3a", "#4f7b3c", "#2d8a8a",
+    "#3a5a8c", "#6a4a8a", "#a04a7a", "#8a3a3a", "#5a6a4a",
+]
+PALETTE_RESIDUAL = "#8a7a5a"
+ABBREVS = [
+    "A.I.", "F. Scott", "vol.", "no.", "pp.",
+    "Mr.", "Mrs.", "Dr.", "Ms.", "St.", "Jr.", "Sr.",
+    "e.g.", "i.e.", "etc.", "U.S.", "U.K.",
+]
+
+
+def times_in(body: str, phrase: str) -> str:
+    pattern = r"\b" + r"\s+".join(re.escape(w) for w in phrase.split()) + r"\b"
+    n = len(re.findall(pattern, body, re.IGNORECASE))
+    return "once" if n == 1 else f"{n} times"
+
+
+def sentence_starters(body: str) -> Counter[str]:
+    text = body
+    text = re.sub(r"(?m)^\[\^[\w-]+\]:.*$", "", text)
+    text = re.sub(r"\[\^[\w-]+\]", "", text)
+    text = re.sub(r"(?m)^#+\s.*$", "", text)
+    text = re.sub(r"(?m)^>", "", text)
+    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"\[[^\]\n]*\]", "", text)
+    text = text.replace("**", "").replace("*", "")
+    text = (text.replace("“", '"').replace("”", '"')
+                .replace("‘", "'").replace("’", "'"))
+    text = re.sub(r"\s+", " ", text).strip()
+    for a in ABBREVS:
+        text = text.replace(a, a.replace(".", "․"))
+    parts = re.split(r"(?<=[.?!])[\"']?\s+", text)
+    starters: list[str] = []
+    for s in parts:
+        s = s.strip().strip("\"'")
+        m = re.match(r"([A-Za-z][A-Za-z'\-]*)", s)
+        if m:
+            starters.append(m.group(1))
+    return Counter(starters)
+
+
+def starters_chart(body: str) -> str:
+    counts = sentence_starters(body)
+    total = sum(counts.values()) or 1
+    top10 = counts.most_common(10)
+    rest = total - sum(n for _, n in top10)
+
+    slices = [(w, n, PALETTE_TOP10[i]) for i, (w, n) in enumerate(top10)]
+    if rest > 0:
+        slices.append(("Mostly singletons", rest, PALETTE_RESIDUAL))
+
+    cx, cy, r = 90, 90, 80
+    angle = -math.pi / 2
+    paths: list[str] = []
+    for _, count, color in slices:
+        frac = count / total
+        end = angle + frac * 2 * math.pi
+        x1, y1 = cx + r * math.cos(angle), cy + r * math.sin(angle)
+        x2, y2 = cx + r * math.cos(end), cy + r * math.sin(end)
+        large = 1 if frac > 0.5 else 0
+        paths.append(
+            f'<path d="M {cx},{cy} L {x1:.2f},{y1:.2f} '
+            f'A {r},{r} 0 {large} 1 {x2:.2f},{y2:.2f} Z" fill="{color}" />'
+        )
+        angle = end
+
+    svg = (
+        '<svg viewBox="0 0 180 180" width="180" height="180" class="starter-pie" '
+        'role="img" aria-label="sentence-starter distribution">'
+        + "".join(paths) + "</svg>"
+    )
+
+    legend = "".join(
+        f'<li><span class="sw" style="background:{color}"></span>'
+        f'<span class="lab">{html.escape(label)}</span>'
+        f'<span class="num">{count} &middot; {count * 100 / total:.1f}%</span></li>'
+        for label, count, color in slices
+    )
+
+    return (
+        f'<div class="starter-chart">{svg}'
+        f'<ul class="starter-legend">{legend}</ul>'
+        f'<div class="starter-meta">{total} sentences &middot; '
+        f'{len(counts)} unique starters</div></div>'
+    )
+IMAGE = re.compile(r"!\[([^\]\n]*)\]\(([^)\s]+)\)")
+LINK = re.compile(r"\[([^\]\n]+)\]\(([^)\s]+)\)")
+BOLD = re.compile(r"\*\*([^*\n]+)\*\*")
 ITALIC = re.compile(r"\*([^*\n]+)\*")
+# Bare URLs not already inside an href attribute or anchor body.
+URL_AUTOLINK = re.compile(r'(?<![">\w/=])(https?://[^\s<>")]+)')
+
+
+def _autolink_repl(m: re.Match) -> str:
+    url = m.group(1)
+    trail = ""
+    while url and url[-1] in ".,;:!?)":
+        trail = url[-1] + trail
+        url = url[:-1]
+    return f'<a href="{url}">{url}</a>{trail}'
 
 
 def inline(text: str) -> str:
-    return ITALIC.sub(r"<em>\1</em>", text)
+    text = LINK.sub(r'<a href="\2">\1</a>', text)
+    text = URL_AUTOLINK.sub(_autolink_repl, text)
+    text = BOLD.sub(r"<strong>\1</strong>", text)
+    text = ITALIC.sub(r"<em>\1</em>", text)
+    return text
+
+
+def render_blockquote(block: str) -> str:
+    quote_lines: list[str] = []
+    cite_lines: list[str] = []
+    for line in block.splitlines():
+        line = re.sub(r"^>\s?", "", line)
+        if line.startswith("*") and not line.startswith("**"):
+            line = line.lstrip("*").rstrip("*").strip()
+            cite_lines.append(inline(line))
+        else:
+            quote_lines.append(inline(line))
+    quote_html = " ".join(quote_lines).strip()
+    cite_html = " ".join(cite_lines).strip()
+    parts = [f"<p>{quote_html}</p>"] if quote_html else []
+    if cite_html:
+        parts.append(f"<cite>{cite_html}</cite>")
+    return f'<blockquote class="pullquote">{"".join(parts)}</blockquote>'
 
 
 def render_body(body_src: str, order: list[str]) -> str:
@@ -47,6 +175,14 @@ def render_body(body_src: str, order: list[str]) -> str:
 
     body_src = FN_REF.sub(ref_sub, body_src)
 
+    # A line that contains nothing but an image markdown should be its own
+    # block (figure) even if the user didn't surround it with blank lines.
+    body_src = re.sub(
+        r"(?m)^(!\[[^\]\n]*\]\([^)\s]+\))[ \t]*$",
+        r"\n\1\n",
+        body_src,
+    )
+
     blocks: list[str] = []
     for raw in re.split(r"\n\s*\n", body_src):
         block = raw.strip()
@@ -56,6 +192,12 @@ def render_body(body_src: str, order: list[str]) -> str:
             blocks.append(f"<h2>{inline(block[3:].strip())}</h2>")
         elif block.startswith("# "):
             blocks.append(f"<h1>{inline(block[2:].strip())}</h1>")
+        elif block.startswith(">"):
+            blocks.append(render_blockquote(block))
+        elif (m := IMAGE.fullmatch(block.strip())):
+            alt, src = m.group(1), m.group(2)
+            cap = f"<figcaption>{inline(alt)}</figcaption>" if alt else ""
+            blocks.append(f'<figure><img src="{src}" alt="{html.escape(alt)}">{cap}</figure>')
         else:
             blocks.append(f"<p>{inline(block.replace(chr(10), ' '))}</p>")
     return "\n".join(blocks)
@@ -126,21 +268,75 @@ TEMPLATE = """<!DOCTYPE html>
     margin: 0 0 1.1em 0;
   }
   em { font-style: italic; }
+  strong { font-weight: 600; }
+  main p a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+  main p a:hover { background: rgba(43,24,16,0.08); }
+  figure {
+    margin: 2.4em 0;
+    text-align: center;
+  }
+  figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 6px 22px rgba(43,24,16,0.25);
+  }
+  figure figcaption {
+    margin-top: 0.7em;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    opacity: 0.75;
+    font-style: italic;
+  }
+  blockquote.pullquote {
+    margin: 2.2em -0.5em;
+    padding: 1.1em 0.5em 1.2em;
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    text-align: center;
+    font-family: 'Charmonman', 'Quicksand', cursive;
+    font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+    line-height: 1.25;
+  }
+  blockquote.pullquote p {
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  blockquote.pullquote strong { font-weight: inherit; }
+  blockquote.pullquote cite {
+    display: block;
+    font-family: 'Quicksand', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-top: 0.9em;
+  }
   sup.fnref {
     font-size: 0.65em;
     line-height: 0;
     margin-left: 0.05em;
   }
   sup.fnref a {
-    color: inherit;
+    color: #b04a2a;
     text-decoration: none;
-    border-bottom: 1px solid currentColor;
-    padding: 0 0.2em;
+    font-weight: 700;
+    padding: 0 0.15em;
   }
-  sup.fnref a:hover { background: rgba(43,24,16,0.08); }
+  sup.fnref a:hover { background: rgba(176, 74, 42, 0.14); }
   #fnpop {
     position: absolute;
-    max-width: 360px;
+    width: 320px;
+    max-height: 80vh;
+    overflow-y: auto;
     background: #f5e6c5;
     color: #2b1810;
     padding: 1em 1.15em;
@@ -151,6 +347,48 @@ TEMPLATE = """<!DOCTYPE html>
     z-index: 10;
   }
   #fnpop[hidden] { display: none; }
+  #fnpop a {
+    color: #8a3324;
+    text-decoration: none;
+  }
+  #fnpop a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+  .starter-chart { font-size: 0.85rem; line-height: 1.35; }
+  .starter-pie { display: block; margin: 0 auto 0.9em; }
+  .starter-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .starter-legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.12em 0;
+  }
+  .starter-legend .sw {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .starter-legend .lab { flex: 1; font-weight: 500; }
+  .starter-legend .num {
+    font-family: 'SF Mono', Menlo, Consolas, ui-monospace, monospace;
+    font-size: 0.85em;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+  .starter-meta {
+    margin-top: 0.7em;
+    text-align: center;
+    font-family: 'SF Mono', Menlo, Consolas, ui-monospace, monospace;
+    font-size: 0.78em;
+    opacity: 0.7;
+  }
 </style>
 </head>
 <body>
@@ -196,11 +434,51 @@ __FOOTNOTES__
 """
 
 
-def build(md_path: Path) -> Path:
+def validate(src: str, defs: dict[str, str]) -> list[str]:
+    """Collect issues that would produce a broken document. Caller aborts."""
+    issues: list[str] = []
+    body = FN_DEF.sub("", src)
+    refs = [m.group(1) for m in FN_REF.finditer(body)]
+    seen: set[str] = set()
+    for key in refs:
+        if key in seen or key in defs:
+            seen.add(key)
+            continue
+        seen.add(key)
+        near = re.search(rf"^\[\^{re.escape(key)}\][ \t]+\S", src, re.MULTILINE)
+        if near:
+            issues.append(
+                f"[^{key}] is referenced but its definition line is missing ':' — "
+                f"change '[^{key}] ...' to '[^{key}]: ...'"
+            )
+        else:
+            issues.append(f"[^{key}] is referenced but has no definition")
+    return issues
+
+
+def build(md_path: Path) -> Path | None:
     src = md_path.read_text(encoding="utf-8")
     src = src.replace("\r\n", "\n").replace("\f", "")
     defs = {m.group(1): m.group(2).strip() for m in FN_DEF.finditer(src)}
+
+    issues = validate(src, defs)
+    if issues:
+        print(f"  {md_path.name}: not built — {len(issues)} issue(s):", file=sys.stderr)
+        for msg in issues:
+            print(f"    • {msg}", file=sys.stderr)
+        return None
+
     body_src = FN_DEF.sub("", src).strip()
+
+    def sub_times(m: re.Match) -> str:
+        return times_in(body_src, m.group(1))
+
+    body_src = TIMES.sub(sub_times, body_src)
+    defs = {k: TIMES.sub(sub_times, v) for k, v in defs.items()}
+
+    chart_html = starters_chart(body_src)
+    body_src = STARTERS.sub(lambda _m: chart_html, body_src)
+    defs = {k: STARTERS.sub(lambda _m: chart_html, v) for k, v in defs.items()}
 
     order: list[str] = []
     body_html = render_body(body_src, order)
@@ -231,10 +509,14 @@ def main(argv: list[str]) -> int:
     if not targets:
         print("nothing to build", file=sys.stderr)
         return 1
+    failed = 0
     for p in targets:
         out = build(p)
-        print(f"built {out.relative_to(ROOT)}")
-    return 0
+        if out is None:
+            failed += 1
+        else:
+            print(f"built {out.relative_to(ROOT)}")
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":
