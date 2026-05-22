@@ -119,6 +119,7 @@ def starters_chart(body: str) -> str:
         f'{len(counts)} unique starters</div></div>'
     )
 IMAGE = re.compile(r"!\[([^\]\n]*)\]\(([^)\s]+)\)")
+LINKED_IMAGE = re.compile(r"\[!\[([^\]\n]*)\]\(([^)\s]+)\)\]\(([^)\s]+)\)")
 LINK = re.compile(r"\[([^\]\n]+)\]\(([^)\s]+)\)")
 BOLD = re.compile(r"\*\*([^*\n]+)\*\*")
 ITALIC = re.compile(r"\*([^*\n]+)\*")
@@ -178,7 +179,7 @@ def render_body(body_src: str, order: list[str]) -> str:
     # A line that contains nothing but an image markdown should be its own
     # block (figure) even if the user didn't surround it with blank lines.
     body_src = re.sub(
-        r"(?m)^(!\[[^\]\n]*\]\([^)\s]+\))[ \t]*$",
+        r"(?m)^(\[?!\[[^\]\n]*\]\([^)\s]+\)\]?(?:\([^)\s]+\))?)[ \t]*$",
         r"\n\1\n",
         body_src,
     )
@@ -192,8 +193,18 @@ def render_body(body_src: str, order: list[str]) -> str:
             blocks.append(f"<h2>{inline(block[3:].strip())}</h2>")
         elif block.startswith("# "):
             blocks.append(f"<h1>{inline(block[2:].strip())}</h1>")
+        elif block == "---":
+            blocks.append('<p class="section-break">§</p>')
         elif block.startswith(">"):
             blocks.append(render_blockquote(block))
+        elif (m := LINKED_IMAGE.fullmatch(block.strip())):
+            alt, img_src, href = m.group(1), m.group(2), m.group(3)
+            cap = f"<figcaption>{inline(alt)}</figcaption>" if alt else ""
+            blocks.append(
+                f'<figure><a href="{html.escape(href)}">'
+                f'<img src="{img_src}" alt="{html.escape(alt)}">'
+                f'</a>{cap}</figure>'
+            )
         elif (m := IMAGE.fullmatch(block.strip())):
             alt, src = m.group(1), m.group(2)
             cap = f"<figcaption>{inline(alt)}</figcaption>" if alt else ""
@@ -224,8 +235,8 @@ TEMPLATE = """<!DOCTYPE html>
   html, body {
     margin: 0;
     padding: 0;
-    background: #9bd4d6;
-    color: #2b1810;
+    background: __BG__;
+    color: __TEXT__;
     font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
   }
   body {
@@ -292,6 +303,14 @@ TEMPLATE = """<!DOCTYPE html>
     line-height: 1.4;
     opacity: 0.75;
     font-style: italic;
+  }
+  p.section-break {
+    text-align: center;
+    font-family: 'Charmonman', 'Quicksand', cursive;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+    line-height: 1.25;
+    margin: 1.35em 0;
   }
   blockquote.pullquote {
     margin: 2.2em -0.5em;
@@ -456,9 +475,18 @@ def validate(src: str, defs: dict[str, str]) -> list[str]:
     return issues
 
 
+COLOR_HINT = re.compile(r"^<!--\s*(bg|text)\s*:\s*(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\s*-->\s*$", re.MULTILINE)
+
+
 def build(md_path: Path) -> Path | None:
     src = md_path.read_text(encoding="utf-8")
     src = src.replace("\r\n", "\n").replace("\f", "")
+
+    colors = {"bg": "#9bd4d6", "text": "#2b1810"}
+    for m in COLOR_HINT.finditer(src):
+        colors[m.group(1)] = m.group(2)
+    src = COLOR_HINT.sub("", src).lstrip()
+
     defs = {m.group(1): m.group(2).strip() for m in FN_DEF.finditer(src)}
 
     issues = validate(src, defs)
@@ -495,6 +523,8 @@ def build(md_path: Path) -> Path | None:
         .replace("__TITLE__", html.escape(title))
         .replace("__BODY__", body_html)
         .replace("__FOOTNOTES__", fn_blocks)
+        .replace("__BG__", colors["bg"])
+        .replace("__TEXT__", colors["text"])
     )
 
     out = md_path.with_suffix(".html")

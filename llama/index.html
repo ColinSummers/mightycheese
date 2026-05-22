@@ -60,6 +60,17 @@
     text-decoration-thickness: 2px;
     text-underline-offset: 0.08em;
   }
+  a.notablog {
+    position: fixed;
+    right: 6vw;
+    bottom: 3vh;
+    color: #b04a2a;
+    font-family: 'Storyscript', 'Quicksand', cursive;
+    font-size: clamp(0.765rem, 1.98vw, 1.89rem);
+    text-decoration: none;
+    opacity: 0.85;
+  }
+  a.notablog:hover { opacity: 1; text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -70,13 +81,14 @@
     <a href="history.html">Know your history.</a>
     <a href="#">You're not a luddite.</a>
     <a href="#">Greedy people are selling snake oil.</a>
-    <a href="#">It is useful for non-creative, repetitive tasks.</a>
+    <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a>
   </p>
 </main>
+<a class="notablog" href="not-a-blog.html">Not a blog by Colin Summers</a>
 <script>
   window.addEventListener('load', () => {
     const links = document.querySelectorAll('p a');
-    links.forEach((a, i) => setTimeout(() => a.classList.add('lit'), 400 + i * 550));
+    links.forEach((a, i) => setTimeout(() => a.classList.add('lit'), 400 + i * 1100));
   });
 </script>
 </body>

@@ -1,0 +1,3 @@
+## Repetitive Tasks
+
+I spoke recently to a researcher. He designs the experiments that meet the federal guidelines for new drugs and, during his career, he has shepherded through four new drugs for treatment. So curing cancer. I laughed about how the promises are that AI will cure cancer and that he’ll be out of a job. He said that he works with a bunch of different companies pursuing treatment drugs and one of them is purely AI. They are using a llama to fold and test their protein long before it gets to him and the first one they gave him passed every test. Similar proteins (it sounded like for the same condition) often had ‘safety issues,’ and their new one had none.

@@ -14,6 +14,7 @@ Look at all the words that start a sentence. Roll a die and pick one (‘Look’
 
 Shaney’s little engine was trained on the text of alt.singles itself. He was feeding back into the community a gruel of their own meaty text ground up and served back like Scrapple. As far as I know, most people were fooled.[^practice]
 
+---
 
 That was forty-two years ago. By Moore’s law[^moore] computers are now exponentially more powerful. They have grown so vast in power and storage that it is no longer possible for our minds to grasp the numbers that represent their mathematical abililties. Billions of transistors work together to deliver a response from an LLM into your browser. The large language model I recently downloaded to my laptop was trained with three billion weights. In “The Blind Watchmaker” Richard Dawkins writes about how faith is often an argument from personal incredulity. “I don’t believe there could be so many species without a mind designing them.” “If the universe had a beginning, what was there before that? It’s impossible to imagine, it can’t be.”
 
@@ -24,6 +25,7 @@ So now we are in the age, another age really, of magic. But you deserve a peek b
 
 Even though we have jumped up the power of the machine, even though we have had thousands of people work on the code, on the math, the theories that underpin the LLM, it is, deep down, no different than Mark V Shaney. We have fed it (counter to the laws of any nation with copyright laws) as much text as it can gobble. We have trained the output so that real people react to it positively[^flatter]. But that’s it. It is an engine just like the one inside Mark V Shaney, that does the same thing. An engine in the same sense that the Saturn V rocket engine is the same as the Model T combustion engine. Fuel in, force out. Nothing more complex.
 
+---
 
 Let us step away from computers, ironically the landscape where the LLM is most useful, and talk about the Beatles. We could talk about how *All You Need is Love* is the same tune as Mozart’s *Piano Concerto No. 25.* Instead, we will just look at one Beatle, George Harrison. George wrote a song, *My Sweet Lord,* which to some ears sounded a lot like *He’s So Fine.* A song that George certainly heard, or at the very least had heard all of the songs that the composer of *He’s So Fine* had heard. They were strolling the same ground, enjoying the same views, and wrote the same song.
 
@@ -51,7 +53,7 @@ The AI cabal (caibal?) would like to you believe that AI will cure cancer. That 
 
 And the renowned computer scientist, Donald Knuth,[^knuth] recently collaborated with a llama and mathematician to solve a fairly major unsolved math problem. It was impressive.[^knuth-claude] It did *not* start with the llama identifying an interesting problem in math and then calling Knuth in for help. If you rounded up the caibal and shipped them off to the moon colony, and just let the llamas hum quietly in their data centers, they would never wonder about their ‘state of existence,’ or anything like that.
 
-I spoke recently to a researcher. He designs the experiments that meet the federal guidelines for new drugs and, during his career, he has shepherded through four new drugs for treatment. So curing cancer. I laughed about how the promises are that AI will cure cancer and that he’ll be out of a job. He said that he works with a bunch of different companies pursuing treatment drugs and one of them is purely AI. They are using a llama to fold and test their protein long before it gets to him and the first one they gave him passed every test. Similar proteins (it sounded like for the same condition) often had ‘safety issues,’ and their new one had none.
+
 
 
 
@@ -69,7 +71,7 @@ I spoke recently to a researcher. He designs the experiments that meet the feder
 
 [^markov]: Markov, A. A. "Rasprostranenie zakona bol'shikh chisel na velichiny, zavisyashchie drug ot druga" (Extension of the law of large numbers to dependent quantities). Izvestiya Fiziko-matematicheskogo obshchestva pri Kazanskom universitete, 2nd series, vol. 15, 1906, pp. 135–156 and Markov, A. A. "Primer statisticheskogo issledovaniya nad tekstom 'Evgeniya Onegina'" (An example of statistical investigation of the text of Eugene Onegin). Izvestiya Imperatorskoy Akademii Nauk, series 6, vol. 7, 1913, pp.153–162.
 
-[^usenet]: [reference for alt.singles and newsgroups]
+[^usenet]: Hauben, M., & Hauben, R. (1997). Netizens: On the history and impact of Usenet and the internet. IEEE Computer Society Press.
 
 [^practice]: Kernighan, B. W., & Pike, R. (1999). The Practice of Programming. Addison-Wesley.
 
