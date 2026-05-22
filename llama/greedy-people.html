@@ -33,7 +33,8 @@
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
+  nav.back .prim-line, nav.next .prim-line {
     display: block;
   }
   nav.back a:hover, nav.next a:hover {
@@ -221,7 +222,7 @@
 </style>
 </head>
 <body>
-<nav class="back"><a href="index.html">&larr; llamas</a></nav>
+<nav class="back"><span class="prim-line">&larr; <a href="index.html">llamas</a></span></nav>
 <nav class="next"><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
 <main>
 <h2>Greedy People are Selling Snake Oil</h2>

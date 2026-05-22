@@ -1,6 +1,6 @@
 <!-- footer-link: not-a-blog.html -->
 <!-- footer-label: Not a blog by Colin Summers -->
-<!-- version: v0.4 May 22 2026 10:58pm -->
+<!-- version: v0.4 May 22 2026 11:01pm -->
 
 # the llamas are not
 # going to eat your lunch

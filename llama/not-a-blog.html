@@ -33,7 +33,8 @@
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
+  nav.back .prim-line, nav.next .prim-line {
     display: block;
   }
   nav.back a:hover, nav.next a:hover {
@@ -221,7 +222,7 @@
 </style>
 </head>
 <body>
-<nav class="back"><a href="index.html">&larr; llamas</a></nav>
+<nav class="back"><span class="prim-line">&larr; <a href="index.html">llamas</a></span></nav>
 <nav class="next mail"><a href="mailto:colin@mightycheese.com" aria-label="Email Colin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg></a></nav>
 <main>
 <h2>Not a Blog</h2>

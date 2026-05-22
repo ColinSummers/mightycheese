@@ -259,7 +259,8 @@ TEMPLATE = """<!DOCTYPE html>
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
+  nav.back .prim-line, nav.next .prim-line {
     display: block;
   }
   nav.back a:hover, nav.next a:hover {
@@ -578,11 +579,11 @@ def build(md_path: Path) -> Path | None:
         prev_label = first_heading(prev_src.read_text(encoding="utf-8"))
         prev_href = prev_src.with_suffix(".html").name
         back_html = (
-            f'<a href="{html.escape(prev_href)}">&larr; {html.escape(prev_label, quote=False)}</a>'
+            f'<span class="prim-line">&larr; <a href="{html.escape(prev_href)}">{html.escape(prev_label, quote=False)}</a></span>'
             f'<span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span>'
         )
     else:
-        back_html = '<a href="index.html">&larr; llamas</a>'
+        back_html = '<span class="prim-line">&larr; <a href="index.html">llamas</a></span>'
 
     next_href = meta.get("next", "")
     next_label = meta.get("next-label", "")
@@ -608,8 +609,9 @@ def build(md_path: Path) -> Path | None:
             next_md = LLAMA / Path(next_href).with_suffix(".md").name
             next_label = first_heading(next_md.read_text(encoding="utf-8")) if next_md.exists() else next_href
         next_html = (
-            f'<nav class="next"><a href="{html.escape(next_href)}">'
-            f'{html.escape(next_label, quote=False)} &rarr;</a>{sub_blog}</nav>'
+            f'<nav class="next"><span class="prim-line">'
+            f'<a href="{html.escape(next_href)}">{html.escape(next_label, quote=False)}</a> &rarr;'
+            f'</span>{sub_blog}</nav>'
         )
     elif sub_blog:
         next_html = f'<nav class="next">{sub_blog}</nav>'

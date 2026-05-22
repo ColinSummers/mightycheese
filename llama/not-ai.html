@@ -33,7 +33,8 @@
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
+  nav.back .prim-line, nav.next .prim-line {
     display: block;
   }
   nav.back a:hover, nav.next a:hover {
@@ -221,8 +222,8 @@
 </style>
 </head>
 <body>
-<nav class="back"><a href="index.html">&larr; llamas</a></nav>
-<nav class="next"><a href="history.html">Know your history. &rarr;</a><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
+<nav class="back"><span class="prim-line">&larr; <a href="index.html">llamas</a></span></nav>
+<nav class="next"><span class="prim-line"><a href="history.html">Know your history.</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
 <main>
 <h2>It is not A.I.</h2>
 <p>Whenever possible, I try not to call it A.I. And I encourage other people to do the same. We should be careful with our language because particular terms and phrases hold powerful promise.</p>
