@@ -47,11 +47,7 @@ Mathematically, logically, computationally, the LLM can only interpolate. It alw
 
 But.
 
-But, the LLMs, the llamas, are brilliant at grunt work. If you are George Harrison and you’ve put your nose to the grindstone, come up with nine beautiful new songs for *Cloud Nine,* only to have the record company turn around and ask for a handful more to put on the B sides of the singles or to fill out the extended single they want to release, you could ask a llama for help.[^wilburys] And, because we should move out of the creative world and definitely wade out of my old CD collection, there is a lot of grunt work ahead of us if we just look at how we have quantized our world.
 
-The AI cabal (caibal?) would like to you believe that AI will cure cancer. That it will find ‘some very interesting new physics," taking us to other planets and putting our data centers into orbit.[^new-phyics] Nonsense. It is humans that will do those things. For all of the work done with llamas so far, none of them are curious. None of them have a drive or a spark.
-
-And the renowned computer scientist, Donald Knuth,[^knuth] recently collaborated with a llama and mathematician to solve a fairly major unsolved math problem. It was impressive.[^knuth-claude] It did *not* start with the llama identifying an interesting problem in math and then calling Knuth in for help. If you rounded up the caibal and shipped them off to the moon colony, and just let the llamas hum quietly in their data centers, they would never wonder about their ‘state of existence,’ or anything like that.
 
 
 
@@ -87,8 +83,6 @@ And the renowned computer scientist, Donald Knuth,[^knuth] recently collaborated
 
 [^harrison]: Bright Tunes Music Corp. v. Harrisongs Music, Ltd., 420 F. Supp. 177 (S.D.N.Y. 1976). Reading: [Bright Tunes Music vs Harrisongs Music](https://blogs.law.gwu.edu/mcir/case/bright-tunes-music-v-harrisongs-music/)
 
-[^wilburys]: George didn’t have a llama. He turned instead to friends Tom Petty, Jeff Lynne, Roy Orbison, and Bob Dylan to help him out. Apparently for one of the song writing days they were just reading the ad copy in magazines scattered on the coffee table in the living room. “Big refrigerator. Service charge. Long endurance.” 
-
 [^start-words]: For this document: {{starters: top10}}
 
 [^pfj]: Jillette, P. (1990, July). I spent an interesting evening with a grain of salt. PC/Computing, 3(7), 185.
@@ -96,11 +90,5 @@ And the renowned computer scientist, Donald Knuth,[^knuth] recently collaborated
 [^frankie]: [The Story Behind Frankie and Johnny](https://www.mentalfloss.com/crime/story-behind-frankie-and-johnny)
 
 [^flatter]: Perez, E., Ringer, S., Lukošiūtė, K., Nguyen, K., Cheney, N., Heiner, M., ... & Bowman, S. R. (2022). Discovering Language Model Behaviors with User-Generated Evaluations. arXiv preprint arXiv:2212.09251 *and* Cheng, M., Lee, C., Khadpe, P., Yu, S., Han, D., & Jurafsky, D. (2026). Sycophantic AI decreases prosocial intentions and promotes dependence. Science, 391(6785), eac8352
-
-[^knuth]: [Wikipedia: Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth)
-
-[^knuth-claude]: [Claude Cycles, Stanford Faculty Papers](https://www-cs-faculty.stanford.edu/~knuth/papers/claude-cycles.pdf)
-
-[^new-phyics]: [Elon Musk unsupportable claims](https://www.techradar.com/pro/we-are-going-to-push-the-limits-of-physics-in-compute-elon-musk-wants-texas-terafab-plant-to-produce-one-terawatt-of-computing-power-each-year-and-build-a-global-robot-population-using-tesla-and-spacex-tech)
 
 <!-- next: not-a-luddite.html -->

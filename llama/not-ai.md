@@ -12,7 +12,18 @@ While I didn't like LLM, both spoke and being typed, Meta solved that for me. Th
 
 At Meta, the closer something is to Mark Zuckerberg, the worse it is. Their one contribution here, renaming large language models (LLMs) to llamas, is appreciated. If it really catches on it could kneecap the whole ‘Artificial Intelligence is here!’ movement, which would be good for humanity.
 
+"If these creatures are not conscious, then what the hell is consciousness for?" – Richard Dawkins[^dawkins]
+
+"What, If Anything, Is a Fish?" - Stephen Jay Gould[^gould]
+
+"Within a generation... the problem of creating 'artificial intelligence' will substantially be solved." Marvin Minsky[^minsky]
+
+[^dawkins]: [When Dawkins met Claude](https://unherd.com/2026/05/is-ai-the-next-phase-of-evolution/)
 
 [^llama]: Meta released ollama as open source. It is a way to load and use large language models on your personal computing hardware.
+
+[^gould]: Gould, S. J. (1983). Hen's teeth and horse's toes: Further reflections in natural history. W. W. Norton & Company.
+
+[^minsky]: Minsky, M. (1967). Computation: Finite and Infinite Machines. Prentice-Hall.
 
 <!-- next: history.html -->
