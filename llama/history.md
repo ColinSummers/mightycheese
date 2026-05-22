@@ -65,9 +65,9 @@ And the renowned computer scientist, Donald Knuth,[^knuth] recently collaborated
 
 [^eliza]: Weizenbaum, Joseph. "ELIZA — A Computer Program for the Study of Natural Language Communication Between Man and Machine." Communications of the ACM, vol. 9, no. 1, January 1966, pp. 36–45.  and Weizenbaum, Joseph. Computer Power and Human Reason: From Judgment to Calculation. W. H. Freeman, 1976.
 
-[^power]: Heller, F. (2020). Apollo 11 Guidance Computer (AGC) vs USB-C Chargers. ForrestHeller.com. https://forrestheller.com/Apollo-11-Computer-vs-USB-C-chargers.html
+[^power]: Heller, F. (2020). Apollo 11 Guidance Computer (AGC) vs USB-C Chargers. ForrestHeller.com. [Apollo 11 Computer vs USB-C Chargers](https://forrestheller.com/Apollo-11-Computer-vs-USB-C-chargers.html)
 
-[^web-eliza]: https://eliza.mightycheese.com
+[^web-eliza]: [Web Eliza](https://eliza.mightycheese.com)
 
 [^markov]: Markov, A. A. "Rasprostranenie zakona bol'shikh chisel na velichiny, zavisyashchie drug ot druga" (Extension of the law of large numbers to dependent quantities). Izvestiya Fiziko-matematicheskogo obshchestva pri Kazanskom universitete, 2nd series, vol. 15, 1906, pp. 135–156 and Markov, A. A. "Primer statisticheskogo issledovaniya nad tekstom 'Evgeniya Onegina'" (An example of statistical investigation of the text of Eugene Onegin). Izvestiya Imperatorskoy Akademii Nauk, series 6, vol. 7, 1913, pp.153–162.
 
@@ -85,7 +85,7 @@ And the renowned computer scientist, Donald Knuth,[^knuth] recently collaborated
 
 [^clarke]: Clarke, A. C. (1973). Profiles of the future: An inquiry into the limits of the possible (Rev. ed.). Harper & Row.
 
-[^harrison]: Bright Tunes Music Corp. v. Harrisongs Music, Ltd., 420 F. Supp. 177 (S.D.N.Y. 1976). Reading: https://blogs.law.gwu.edu/mcir/case/bright-tunes-music-v-harrisongs-music/
+[^harrison]: Bright Tunes Music Corp. v. Harrisongs Music, Ltd., 420 F. Supp. 177 (S.D.N.Y. 1976). Reading: [Bright Tunes Music vs Harrisongs Music](https://blogs.law.gwu.edu/mcir/case/bright-tunes-music-v-harrisongs-music/)
 
 [^wilburys]: George didn’t have a llama. He turned instead to friends Tom Petty, Jeff Lynne, Roy Orbison, and Bob Dylan to help him out. Apparently for one of the song writing days they were just reading the ad copy in magazines scattered on the coffee table in the living room. “Big refrigerator. Service charge. Long endurance.” 
 
@@ -93,12 +93,14 @@ And the renowned computer scientist, Donald Knuth,[^knuth] recently collaborated
 
 [^pfj]: Jillette, P. (1990, July). I spent an interesting evening with a grain of salt. PC/Computing, 3(7), 185.
 
-[^frankie]: https://www.mentalfloss.com/crime/story-behind-frankie-and-johnny
+[^frankie]: [The Story Behind Frankie and Johnny](https://www.mentalfloss.com/crime/story-behind-frankie-and-johnny)
 
 [^flatter]: Perez, E., Ringer, S., Lukošiūtė, K., Nguyen, K., Cheney, N., Heiner, M., ... & Bowman, S. R. (2022). Discovering Language Model Behaviors with User-Generated Evaluations. arXiv preprint arXiv:2212.09251 *and* Cheng, M., Lee, C., Khadpe, P., Yu, S., Han, D., & Jurafsky, D. (2026). Sycophantic AI decreases prosocial intentions and promotes dependence. Science, 391(6785), eac8352
 
-[^knuth]: https://en.wikipedia.org/wiki/Donald_Knuth
+[^knuth]: [Wikipedia: Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth)
 
-[^knuth-claude]: https://www-cs-faculty.stanford.edu/~knuth/papers/claude-cycles.pdf
+[^knuth-claude]: [Claude Cycles, Stanford Faculty Papers](https://www-cs-faculty.stanford.edu/~knuth/papers/claude-cycles.pdf)
 
-[^new-phyics]: https://www.techradar.com/pro/we-are-going-to-push-the-limits-of-physics-in-compute-elon-musk-wants-texas-terafab-plant-to-produce-one-terawatt-of-computing-power-each-year-and-build-a-global-robot-population-using-tesla-and-spacex-tech
+[^new-phyics]: [Elon Musk unsupportable claims](https://www.techradar.com/pro/we-are-going-to-push-the-limits-of-physics-in-compute-elon-musk-wants-texas-terafab-plant-to-produce-one-terawatt-of-computing-power-each-year-and-build-a-global-robot-population-using-tesla-and-spacex-tech)
+
+<!-- next: not-a-luddite.html -->

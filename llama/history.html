@@ -23,17 +23,53 @@
     left: 8.4vw;
     font-size: 0.95rem;
   }
-  nav.back a {
+  nav.next {
+    position: fixed;
+    bottom: 6vh;
+    right: 8.4vw;
+    font-size: 0.95rem;
+  }
+  nav.back a, nav.next a {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid currentColor;
   }
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+    display: block;
+  }
+  nav.back a:hover, nav.next a:hover {
+    text-decoration: underline;
+  }
+  nav.back .sub-line, nav.next .sub-line {
+    font-size: 0.85em;
+    opacity: 0.7;
+    margin-top: 0.25em;
+  }
+  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
+    color: #9bd4d6;
+    font-size: 1.18em;
+  }
+  nav.next { text-align: right; }
+  nav.next.mail a {
+    display: inline-flex;
+    align-items: center;
+  }
+  nav.next.mail svg {
+    width: 2.4rem;
+    height: 2.4rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+  }
+  nav.next.mail a:hover svg { opacity: 1; }
   @media (max-width: 720px) {
-    nav.back {
+    nav.back, nav.next {
       position: static;
       max-width: 38em;
       margin: 0 auto 2em;
     }
+    nav.next { text-align: right; }
   }
   main {
     max-width: 38em;
@@ -185,7 +221,8 @@
 </style>
 </head>
 <body>
-<nav class="back"><a href="index.html">&larr; llamas</a></nav>
+<nav class="back"><a href="not-ai.html">&larr; It is not A.I.</a><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
+<nav class="next"><a href="not-a-luddite.html">You're not a Luddite &rarr;</a><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
 <main>
 <h2>Know your history.</h2>
 <p>It is worth knowing a little bit about what you are being sold, what is (as of Apr 2026) one fifth of the United States economy. And the first thing to know is a little bit of context. I will be brutally brief, but I will include sources.<sup class="fnref"><a href="#" data-fn="wiki" aria-label="footnote 1">1</a></sup></p>
@@ -217,8 +254,8 @@
 </main>
 <template data-fn="wiki">My children will admonish me for using Wikipedia as a source, something they were not allowed to do even back in high school. It is <em>not</em> a primary source. And they are correct. But it is not bad for background and it has links to primary sources, you just need to do a little work.</template>
 <template data-fn="eliza">Weizenbaum, Joseph. "ELIZA — A Computer Program for the Study of Natural Language Communication Between Man and Machine." Communications of the ACM, vol. 9, no. 1, January 1966, pp. 36–45.  and Weizenbaum, Joseph. Computer Power and Human Reason: From Judgment to Calculation. W. H. Freeman, 1976.</template>
-<template data-fn="power">Heller, F. (2020). Apollo 11 Guidance Computer (AGC) vs USB-C Chargers. ForrestHeller.com. <a href="https://forrestheller.com/Apollo-11-Computer-vs-USB-C-chargers.html">https://forrestheller.com/Apollo-11-Computer-vs-USB-C-chargers.html</a></template>
-<template data-fn="web-eliza"><a href="https://eliza.mightycheese.com">https://eliza.mightycheese.com</a></template>
+<template data-fn="power">Heller, F. (2020). Apollo 11 Guidance Computer (AGC) vs USB-C Chargers. ForrestHeller.com. <a href="https://forrestheller.com/Apollo-11-Computer-vs-USB-C-chargers.html">Apollo 11 Computer vs USB-C Chargers</a></template>
+<template data-fn="web-eliza"><a href="https://eliza.mightycheese.com">Web Eliza</a></template>
 <template data-fn="markov">Markov, A. A. "Rasprostranenie zakona bol'shikh chisel na velichiny, zavisyashchie drug ot druga" (Extension of the law of large numbers to dependent quantities). Izvestiya Fiziko-matematicheskogo obshchestva pri Kazanskom universitete, 2nd series, vol. 15, 1906, pp. 135–156 and Markov, A. A. "Primer statisticheskogo issledovaniya nad tekstom 'Evgeniya Onegina'" (An example of statistical investigation of the text of Eugene Onegin). Izvestiya Imperatorskoy Akademii Nauk, series 6, vol. 7, 1913, pp.153–162.</template>
 <template data-fn="included-text">The Terminal Room probably ran some variant of Research Unix Eighth Edition. If so, they had a dictionary (practically useless for language training, there are so few sentences), the bible (which would have made for stilted speech from a chatbot), and the manuals for the operating system itself.</template>
 <template data-fn="local">Only once in this document.</template>
@@ -230,12 +267,12 @@
 <template data-fn="moore">Moore, G. E. (1965). Cramming more components onto integrated circuits. Electronics, 38(8), 114–117.</template>
 <template data-fn="clarke">Clarke, A. C. (1973). Profiles of the future: An inquiry into the limits of the possible (Rev. ed.). Harper & Row.</template>
 <template data-fn="flatter">Perez, E., Ringer, S., Lukošiūtė, K., Nguyen, K., Cheney, N., Heiner, M., ... & Bowman, S. R. (2022). Discovering Language Model Behaviors with User-Generated Evaluations. arXiv preprint arXiv:2212.09251 <em>and</em> Cheng, M., Lee, C., Khadpe, P., Yu, S., Han, D., & Jurafsky, D. (2026). Sycophantic AI decreases prosocial intentions and promotes dependence. Science, 391(6785), eac8352</template>
-<template data-fn="harrison">Bright Tunes Music Corp. v. Harrisongs Music, Ltd., 420 F. Supp. 177 (S.D.N.Y. 1976). Reading: <a href="https://blogs.law.gwu.edu/mcir/case/bright-tunes-music-v-harrisongs-music/">https://blogs.law.gwu.edu/mcir/case/bright-tunes-music-v-harrisongs-music/</a></template>
-<template data-fn="frankie"><a href="https://www.mentalfloss.com/crime/story-behind-frankie-and-johnny">https://www.mentalfloss.com/crime/story-behind-frankie-and-johnny</a></template>
+<template data-fn="harrison">Bright Tunes Music Corp. v. Harrisongs Music, Ltd., 420 F. Supp. 177 (S.D.N.Y. 1976). Reading: <a href="https://blogs.law.gwu.edu/mcir/case/bright-tunes-music-v-harrisongs-music/">Bright Tunes Music vs Harrisongs Music</a></template>
+<template data-fn="frankie"><a href="https://www.mentalfloss.com/crime/story-behind-frankie-and-johnny">The Story Behind Frankie and Johnny</a></template>
 <template data-fn="wilburys">George didn’t have a llama. He turned instead to friends Tom Petty, Jeff Lynne, Roy Orbison, and Bob Dylan to help him out. Apparently for one of the song writing days they were just reading the ad copy in magazines scattered on the coffee table in the living room. “Big refrigerator. Service charge. Long endurance.”</template>
-<template data-fn="new-phyics"><a href="https://www.techradar.com/pro/we-are-going-to-push-the-limits-of-physics-in-compute-elon-musk-wants-texas-terafab-plant-to-produce-one-terawatt-of-computing-power-each-year-and-build-a-global-robot-population-using-tesla-and-spacex-tech">https://www.techradar.com/pro/we-are-going-to-push-the-limits-of-physics-in-compute-elon-musk-wants-texas-terafab-plant-to-produce-one-terawatt-of-computing-power-each-year-and-build-a-global-robot-population-using-tesla-and-spacex-tech</a></template>
-<template data-fn="knuth"><a href="https://en.wikipedia.org/wiki/Donald_Knuth">https://en.wikipedia.org/wiki/Donald_Knuth</a></template>
-<template data-fn="knuth-claude"><a href="https://www-cs-faculty.stanford.edu/~knuth/papers/claude-cycles.pdf">https://www-cs-faculty.stanford.edu/~knuth/papers/claude-cycles.pdf</a></template>
+<template data-fn="new-phyics"><a href="https://www.techradar.com/pro/we-are-going-to-push-the-limits-of-physics-in-compute-elon-musk-wants-texas-terafab-plant-to-produce-one-terawatt-of-computing-power-each-year-and-build-a-global-robot-population-using-tesla-and-spacex-tech">Elon Musk unsupportable claims</a></template>
+<template data-fn="knuth"><a href="https://en.wikipedia.org/wiki/Donald_Knuth">Wikipedia: Donald Knuth</a></template>
+<template data-fn="knuth-claude"><a href="https://www-cs-faculty.stanford.edu/~knuth/papers/claude-cycles.pdf">Claude Cycles, Stanford Faculty Papers</a></template>
 <script>
   const popup = document.createElement('div');
   popup.id = 'fnpop';

@@ -1,3 +1,5 @@
+
+
 ## It is not A.I.
 
 Whenever possible, I try not to call it A.I. And I encourage other people to do the same. We should be careful with our language because particular terms and phrases hold powerful promise.
@@ -13,3 +15,4 @@ At Meta, the closer something is to Mark Zuckerberg, the worse it is. Their one 
 
 [^llama]: Meta released ollama as open source. It is a way to load and use large language models on your personal computing hardware.
 
+<!-- next: history.html -->

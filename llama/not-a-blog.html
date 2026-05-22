@@ -23,17 +23,53 @@
     left: 8.4vw;
     font-size: 0.95rem;
   }
-  nav.back a {
+  nav.next {
+    position: fixed;
+    bottom: 6vh;
+    right: 8.4vw;
+    font-size: 0.95rem;
+  }
+  nav.back a, nav.next a {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid currentColor;
   }
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+    display: block;
+  }
+  nav.back a:hover, nav.next a:hover {
+    text-decoration: underline;
+  }
+  nav.back .sub-line, nav.next .sub-line {
+    font-size: 0.85em;
+    opacity: 0.7;
+    margin-top: 0.25em;
+  }
+  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
+    color: #faf6ed;
+    font-size: 1.18em;
+  }
+  nav.next { text-align: right; }
+  nav.next.mail a {
+    display: inline-flex;
+    align-items: center;
+  }
+  nav.next.mail svg {
+    width: 2.4rem;
+    height: 2.4rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+  }
+  nav.next.mail a:hover svg { opacity: 1; }
   @media (max-width: 720px) {
-    nav.back {
+    nav.back, nav.next {
       position: static;
       max-width: 38em;
       margin: 0 auto 2em;
     }
+    nav.next { text-align: right; }
   }
   main {
     max-width: 38em;
@@ -186,6 +222,7 @@
 </head>
 <body>
 <nav class="back"><a href="index.html">&larr; llamas</a></nav>
+<nav class="next mail"><a href="mailto:colin@mightycheese.com" aria-label="Email Colin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg></a></nav>
 <main>
 <h2>Not a Blog</h2>
 <p>I was writing too much of this down, and sending too much of it to people in email (in reply to simple questions about 'AI'), so I wanted somewhere to park it. As of May 22 2026 I have not released v1.0 so it is hard to picture what this is going to be. But it's not a blog. I am struggling to find through lines, coherence, and a way to keep trimming and and clarifying.</p>

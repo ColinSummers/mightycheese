@@ -23,17 +23,53 @@
     left: 8.4vw;
     font-size: 0.95rem;
   }
-  nav.back a {
+  nav.next {
+    position: fixed;
+    bottom: 6vh;
+    right: 8.4vw;
+    font-size: 0.95rem;
+  }
+  nav.back a, nav.next a {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid currentColor;
   }
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+    display: block;
+  }
+  nav.back a:hover, nav.next a:hover {
+    text-decoration: underline;
+  }
+  nav.back .sub-line, nav.next .sub-line {
+    font-size: 0.85em;
+    opacity: 0.7;
+    margin-top: 0.25em;
+  }
+  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
+    color: #9bd4d6;
+    font-size: 1.18em;
+  }
+  nav.next { text-align: right; }
+  nav.next.mail a {
+    display: inline-flex;
+    align-items: center;
+  }
+  nav.next.mail svg {
+    width: 2.4rem;
+    height: 2.4rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+  }
+  nav.next.mail a:hover svg { opacity: 1; }
   @media (max-width: 720px) {
-    nav.back {
+    nav.back, nav.next {
       position: static;
       max-width: 38em;
       margin: 0 auto 2em;
     }
+    nav.next { text-align: right; }
   }
   main {
     max-width: 38em;
@@ -185,7 +221,8 @@
 </style>
 </head>
 <body>
-<nav class="back"><a href="index.html">&larr; llamas</a></nav>
+<nav class="back"><a href="not-a-luddite.html">&larr; You're not a Luddite</a><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
+<nav class="next"><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
 <main>
 <h2>Repetitive Tasks</h2>
 <p>I spoke recently to a researcher. He designs the experiments that meet the federal guidelines for new drugs and, during his career, he has shepherded through four new drugs for treatment. So curing cancer. I laughed about how the promises are that AI will cure cancer and that he’ll be out of a job. He said that he works with a bunch of different companies pursuing treatment drugs and one of them is purely AI. They are using a llama to fold and test their protein long before it gets to him and the first one they gave him passed every test. Similar proteins (it sounded like for the same condition) often had ‘safety issues,’ and their new one had none.</p>

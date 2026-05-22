@@ -249,17 +249,53 @@ TEMPLATE = """<!DOCTYPE html>
     left: 8.4vw;
     font-size: 0.95rem;
   }
-  nav.back a {
+  nav.next {
+    position: fixed;
+    bottom: 6vh;
+    right: 8.4vw;
+    font-size: 0.95rem;
+  }
+  nav.back a, nav.next a {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid currentColor;
   }
+  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line {
+    display: block;
+  }
+  nav.back a:hover, nav.next a:hover {
+    text-decoration: underline;
+  }
+  nav.back .sub-line, nav.next .sub-line {
+    font-size: 0.85em;
+    opacity: 0.7;
+    margin-top: 0.25em;
+  }
+  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
+    color: __BG__;
+    font-size: 1.18em;
+  }
+  nav.next { text-align: right; }
+  nav.next.mail a {
+    display: inline-flex;
+    align-items: center;
+  }
+  nav.next.mail svg {
+    width: 2.4rem;
+    height: 2.4rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+  }
+  nav.next.mail a:hover svg { opacity: 1; }
   @media (max-width: 720px) {
-    nav.back {
+    nav.back, nav.next {
       position: static;
       max-width: 38em;
       margin: 0 auto 2em;
     }
+    nav.next { text-align: right; }
   }
   main {
     max-width: 38em;
@@ -411,7 +447,8 @@ TEMPLATE = """<!DOCTYPE html>
 </style>
 </head>
 <body>
-<nav class="back"><a href="index.html">&larr; llamas</a></nav>
+<nav class="back">__BACK__</nav>
+__NEXT__
 <main>
 __BODY__
 </main>
@@ -475,17 +512,35 @@ def validate(src: str, defs: dict[str, str]) -> list[str]:
     return issues
 
 
-COLOR_HINT = re.compile(r"^<!--\s*(bg|text)\s*:\s*(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\s*-->\s*$", re.MULTILINE)
+META_HINT = re.compile(r"^<!--\s*([\w-]+)\s*:\s*(.+?)\s*-->\s*$", re.MULTILINE)
+
+
+def prev_map() -> dict[str, Path]:
+    """Build {next-target.html: source-md-path} from all .md files in LLAMA."""
+    m: dict[str, Path] = {}
+    for p in LLAMA.glob("*.md"):
+        if p.name == "index.md":
+            continue
+        text = p.read_text(encoding="utf-8")
+        for hint in META_HINT.finditer(text):
+            if hint.group(1) == "next":
+                m[hint.group(2).strip()] = p
+    return m
 
 
 def build(md_path: Path) -> Path | None:
     src = md_path.read_text(encoding="utf-8")
     src = src.replace("\r\n", "\n").replace("\f", "")
 
-    colors = {"bg": "#9bd4d6", "text": "#2b1810"}
-    for m in COLOR_HINT.finditer(src):
-        colors[m.group(1)] = m.group(2)
-    src = COLOR_HINT.sub("", src).lstrip()
+    meta: dict[str, str] = {}
+    for m in META_HINT.finditer(src):
+        meta[m.group(1)] = m.group(2).strip()
+    src = META_HINT.sub("", src).lstrip()
+
+    colors = {
+        "bg": meta.get("bg", "#9bd4d6"),
+        "text": meta.get("text", "#2b1810"),
+    }
 
     defs = {m.group(1): m.group(2).strip() for m in FN_DEF.finditer(src)}
 
@@ -518,6 +573,49 @@ def build(md_path: Path) -> Path | None:
     )
 
     title = first_heading(src)
+    prev_src = prev_map().get(md_path.with_suffix(".html").name)
+    if prev_src:
+        prev_label = first_heading(prev_src.read_text(encoding="utf-8"))
+        prev_href = prev_src.with_suffix(".html").name
+        back_html = (
+            f'<a href="{html.escape(prev_href)}">&larr; {html.escape(prev_label, quote=False)}</a>'
+            f'<span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span>'
+        )
+    else:
+        back_html = '<a href="index.html">&larr; llamas</a>'
+
+    next_href = meta.get("next", "")
+    next_label = meta.get("next-label", "")
+    mail_to = meta.get("mail", "")
+    is_not_a_blog = md_path.name == "not-a-blog.md"
+    sub_blog = (
+        '' if is_not_a_blog
+        else '<span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span>'
+    )
+    if mail_to:
+        envelope_svg = (
+            '<svg viewBox="0 0 24 24" aria-hidden="true">'
+            '<rect x="3" y="5" width="18" height="14" rx="2" />'
+            '<path d="M3 7l9 6 9-6" />'
+            '</svg>'
+        )
+        next_html = (
+            f'<nav class="next mail"><a href="mailto:{html.escape(mail_to)}" '
+            f'aria-label="Email Colin">{envelope_svg}</a></nav>'
+        )
+    elif next_href:
+        if not next_label:
+            next_md = LLAMA / Path(next_href).with_suffix(".md").name
+            next_label = first_heading(next_md.read_text(encoding="utf-8")) if next_md.exists() else next_href
+        next_html = (
+            f'<nav class="next"><a href="{html.escape(next_href)}">'
+            f'{html.escape(next_label, quote=False)} &rarr;</a>{sub_blog}</nav>'
+        )
+    elif sub_blog:
+        next_html = f'<nav class="next">{sub_blog}</nav>'
+    else:
+        next_html = ""
+
     page = (
         TEMPLATE
         .replace("__TITLE__", html.escape(title))
@@ -525,6 +623,163 @@ def build(md_path: Path) -> Path | None:
         .replace("__FOOTNOTES__", fn_blocks)
         .replace("__BG__", colors["bg"])
         .replace("__TEXT__", colors["text"])
+        .replace("__BACK__", back_html)
+        .replace("__NEXT__", next_html)
+    )
+
+    out = md_path.with_suffix(".html")
+    out.write_text(page, encoding="utf-8")
+    return out
+
+
+INDEX_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mighty Cheese | __PAGE_TITLE__</title>
+<link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&family=Storyscript&display=swap" rel="stylesheet">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #2b1810;
+    color: #9bd4d6;
+    font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6vh 8.4vw;
+    box-sizing: border-box;
+  }
+  main {
+    width: 100%;
+    max-width: 1400px;
+  }
+  h1 {
+    font-family: 'Charmonman', 'Quicksand', cursive;
+    font-weight: 700;
+    font-size: clamp(2.34rem, 8.1vw, 8.1rem);
+    line-height: 1.05;
+    margin: 0 0 0.8em 0;
+    letter-spacing: 0;
+  }
+  h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+  p {
+    font-family: 'Storyscript', 'Quicksand', cursive;
+    font-weight: 400;
+    font-size: clamp(1.7rem, 4.4vw, 4.2rem);
+    line-height: 1.35;
+    margin: 0 12.5%;
+  }
+  p a {
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.18;
+    transition: opacity 0.55s ease, text-shadow 0.55s ease;
+  }
+  p a.lit {
+    opacity: 1;
+    text-shadow: 0 0 18px rgba(155, 212, 214, 0.35);
+  }
+  p a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.08em;
+  }
+  .bottomright {
+    position: fixed;
+    right: 6vw;
+    bottom: 3vh;
+    text-align: right;
+    color: #b04a2a;
+  }
+  a.notablog {
+    color: inherit;
+    font-family: 'Storyscript', 'Quicksand', cursive;
+    font-size: clamp(0.765rem, 1.98vw, 1.89rem);
+    text-decoration: none;
+    opacity: 0.85;
+  }
+  a.notablog:hover { opacity: 1; text-decoration: underline; }
+  .version {
+    margin-top: 0.2em;
+    font-family: 'Quicksand', sans-serif;
+    font-size: clamp(0.38rem, 0.99vw, 0.945rem);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>__HEADLINE__</h1>
+  <p>
+__SENTENCES__
+  </p>
+</main>
+<div class="bottomright">
+  <a class="notablog" href="__FOOTER_LINK__">__FOOTER_LABEL__</a>
+  <div class="version">__VERSION__</div>
+</div>
+<script>
+  window.addEventListener('load', () => {
+    const links = document.querySelectorAll('p a');
+    links.forEach((a, i) => setTimeout(() => a.classList.add('lit'), 400 + i * 1100));
+  });
+</script>
+</body>
+</html>
+"""
+
+
+LIST_ITEM = re.compile(r"^\s*[-*]\s+(.*)$", re.MULTILINE)
+
+
+def build_index(md_path: Path) -> Path:
+    src = md_path.read_text(encoding="utf-8")
+    src = src.replace("\r\n", "\n").replace("\f", "")
+
+    meta: dict[str, str] = {}
+    for m in META_HINT.finditer(src):
+        meta[m.group(1)] = m.group(2).strip()
+    src = META_HINT.sub("", src).strip()
+
+    headline_lines = [
+        line[2:].strip()
+        for line in src.splitlines()
+        if line.strip().startswith("# ")
+    ]
+    if not headline_lines:
+        headline_lines = [first_heading(src)]
+    spans = "".join(f"<span>{html.escape(line)}</span>" for line in headline_lines)
+    raw_headline = " ".join(headline_lines)
+
+    items: list[str] = []
+    for m in LIST_ITEM.finditer(src):
+        item = m.group(1).strip()
+        link = LINK.fullmatch(item)
+        if link:
+            text, href = link.group(1), link.group(2)
+            items.append(f'    <a href="{html.escape(href)}">{html.escape(text, quote=False)}</a>')
+        else:
+            items.append(f'    <a href="#">{html.escape(item, quote=False)}</a>')
+
+    page = (
+        INDEX_TEMPLATE
+        .replace("__PAGE_TITLE__", html.escape(meta.get("page-title", raw_headline)))
+        .replace("__HEADLINE__", spans)
+        .replace("__SENTENCES__", "\n".join(items))
+        .replace("__FOOTER_LINK__", html.escape(meta.get("footer-link", "not-a-blog.html")))
+        .replace("__FOOTER_LABEL__", html.escape(meta.get("footer-label", "Not a blog by Colin Summers")))
+        .replace("__VERSION__", html.escape(meta.get("version", "")))
     )
 
     out = md_path.with_suffix(".html")
@@ -533,15 +788,16 @@ def build(md_path: Path) -> Path | None:
 
 
 def main(argv: list[str]) -> int:
-    targets = [Path(a) for a in argv[1:]] if len(argv) > 1 else sorted(
-        p for p in LLAMA.glob("*.md") if p.name != "index.md"
-    )
+    targets = [Path(a) for a in argv[1:]] if len(argv) > 1 else sorted(LLAMA.glob("*.md"))
     if not targets:
         print("nothing to build", file=sys.stderr)
         return 1
     failed = 0
     for p in targets:
-        out = build(p)
+        if p.name == "index.md":
+            out = build_index(p)
+        else:
+            out = build(p)
         if out is None:
             failed += 1
         else:

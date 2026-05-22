@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mighty Cheese | The llamas are not going to eat your lunch</title>
+<title>Mighty Cheese | the llamas are not going to eat your lunch</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&family=Storyscript&display=swap" rel="stylesheet">
 <style>
   html, body {
@@ -60,17 +60,28 @@
     text-decoration-thickness: 2px;
     text-underline-offset: 0.08em;
   }
-  a.notablog {
+  .bottomright {
     position: fixed;
     right: 6vw;
     bottom: 3vh;
+    text-align: right;
     color: #b04a2a;
+  }
+  a.notablog {
+    color: inherit;
     font-family: 'Storyscript', 'Quicksand', cursive;
     font-size: clamp(0.765rem, 1.98vw, 1.89rem);
     text-decoration: none;
     opacity: 0.85;
   }
   a.notablog:hover { opacity: 1; text-decoration: underline; }
+  .version {
+    margin-top: 0.2em;
+    font-family: 'Quicksand', sans-serif;
+    font-size: clamp(0.38rem, 0.99vw, 0.945rem);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
 </style>
 </head>
 <body>
@@ -79,12 +90,15 @@
   <p>
     <a href="not-ai.html">It's not A.I.</a>
     <a href="history.html">Know your history.</a>
-    <a href="#">You're not a luddite.</a>
-    <a href="#">Greedy people are selling snake oil.</a>
-    <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a>
+    <a href="not-a-luddite.html">You're not a luddite.</a>
+    <a href="greedy-people.html">You are rightfully creeped out by people tring to sell you snake oil.</a>
+    <a href="rsi.html">It is useful for non-creative, repetitive tasks which are narrowly defined and foundationally sourced with a lot of engineering text.</a>
   </p>
 </main>
-<a class="notablog" href="not-a-blog.html">Not a blog by Colin Summers</a>
+<div class="bottomright">
+  <a class="notablog" href="not-a-blog.html">Not a blog by Colin Summers</a>
+  <div class="version">v0.4 May 22 2026 10:32pm</div>
+</div>
 <script>
   window.addEventListener('load', () => {
     const links = document.querySelectorAll('p a');
