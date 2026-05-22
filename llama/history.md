@@ -15,23 +15,23 @@ Look at all the words that start a sentence. Roll a die and pick one (‘Look’
 Shaney’s little engine was trained on the text of alt.singles itself. He was feeding back into the community a gruel of their own meaty text ground up and served back like Scrapple. As far as I know, most people were fooled.[^practice]
 
 
-That was forty-two years ago. By Moore’s law[^moore] computers are now exponentially more powerful. They have grown so fast in power that it is no longer possible for our minds to grasp the numbers that represent their power. Billions of transistors work together to deliver a response from an LLM into your browser. The large language model I recently downloaded to my laptop was trained with three billion weights. In “The Blind Watchmaker” Richard Dawkins writes about how faith is often an argument from personal incredulity. “I don’t believe there could be so many species without a mind designing them.” “If the universe had a beginning, what was there before that? It’s impossible to imagine, it can’t be.”
+That was forty-two years ago. By Moore’s law[^moore] computers are now exponentially more powerful. They have grown so vast in power and storage that it is no longer possible for our minds to grasp the numbers that represent their mathematical abililties. Billions of transistors work together to deliver a response from an LLM into your browser. The large language model I recently downloaded to my laptop was trained with three billion weights. In “The Blind Watchmaker” Richard Dawkins writes about how faith is often an argument from personal incredulity. “I don’t believe there could be so many species without a mind designing them.” “If the universe had a beginning, what was there before that? It’s impossible to imagine, it can’t be.”
 
->**“Any sufficiently advanced technology is indistinguishable from magic."**
+>**Any sufficiently advanced technology is indistinguishable from magic.**
 >*Arthur C Clarke[^clarke]
 
-So now we are in the age, another age, really, of magic. But you deserve a peek behind the curtain, because you are likely one of the people whose lives will be disrupted by the magic.
+So now we are in the age, another age really, of magic. But you deserve a peek behind the curtain, because you are likely one of the people whose lives will be disrupted by the magic.
 
 Even though we have jumped up the power of the machine, even though we have had thousands of people work on the code, on the math, the theories that underpin the LLM, it is, deep down, no different than Mark V Shaney. We have fed it (counter to the laws of any nation with copyright laws) as much text as it can gobble. We have trained the output so that real people react to it positively[^flatter]. But that’s it. It is an engine just like the one inside Mark V Shaney, that does the same thing. An engine in the same sense that the Saturn V rocket engine is the same as the Model T combustion engine. Fuel in, force out. Nothing more complex.
 
 
 Let us step away from computers, ironically the landscape where the LLM is most useful, and talk about the Beatles. We could talk about how *All You Need is Love* is the same tune as Mozart’s *Piano Concerto No. 25.* Instead, we will just look at one Beatle, George Harrison. George wrote a song, *My Sweet Lord,* which to some ears sounded a lot like *He’s So Fine.* A song that George certainly heard, or at the very least had heard all of the songs that the composer of *He’s So Fine* had heard. They were strolling the same ground, enjoying the same views, and wrote the same song.
 
-Because George was more famous than all but two or three other people on the planet, the publishing rights of any of his radio tunes was a goldmine. So someone clever (but certainly not ethical) bought the rights to the earlier song and sued him. And the world got a little primer in how copyright law works with songs.[^harrison]
+Because George was more famous than all but two or three other people on the planet, the publishing rights of any of his radio tunes was a goldmine. So someone clever (but certainly not ethical) bought the rights to the earlier song and sued George. And the world got a little primer in how copyright law works with songs.[^harrison]
 
 In a similar vein, Bob Dylan was sued because *Don’t Think Twice It’s Alright* sounded a lot like a folk song *Who’ll Buy You Ribbons When I’m Gone.* Which was lifted directly from *Who’ll Buy Your Chickens When I’m Gone,* a folk song in the public domain.
 
-You can trace these same sort of cases in the literary world and through other creative works. And there are tomes written about copyright law (which is a fairly recent invention for humanity) and what it means for our culture. Mickey Mouse is only valuable because we collectively decided he was worth noticing and consuming. Somehow, over nearly a hundred years, we have contributed to what Mickey Mouse is, and isn’t, and that makes him an asset. The public has no ownership, but it still carries Mickey on their shoulders like a hero, then paying for the privilege. We have decided, and written into law, that ownership of that asset cannot be forever, and after nearly a century he is ‘owned’ by everyone.
+You can trace these same sort of cases in the literary world and through other creative works. And there are tomes written about copyright law (which is a fairly recent invention for humanity) and what it means for our culture. Mickey Mouse is only valuable because we collectively decided he was enjoyable and worth consuming. Somehow, over nearly a hundred years, we have contributed to what Mickey Mouse is, and isn’t, and that makes him an asset. The public has no ownership, but it still carries Mickey on their shoulders like a hero, then paying for the privilege. We have decided, and written into law, that ownership of that asset cannot be forever, and after nearly a century he is ‘owned’ by everyone.
 
 Most of our art is a trawling through existing art and a regurgitation of the more interesting bits the artist notices, filtered through their experience (including their education) and current state. This is, definitively, the folk song (and folk art) tradition. Anyone can sing *Frankie and Johnny,* change the words, mangle the tune, and call it yours. Not even Frankie Baker has the rights to *Frankie and Johnny.*[^frankie]
 
@@ -75,7 +75,7 @@ I spoke recently to a researcher. He designs the experiments that meet the feder
 
 [^moore]: Moore, G. E. (1965). Cramming more components onto integrated circuits. Electronics, 38(8), 114–117.
 
-[^included-text]: The Terminal Room probably ran some variant of Research Unix Eighth Edition. If so, they had a dictionary (practically useless for language training, there are so few sentances), the bible (which would have made for stilted speech from a chatbot), and the manuals for the operating system itself.
+[^included-text]: The Terminal Room probably ran some variant of Research Unix Eighth Edition. If so, they had a dictionary (practically useless for language training, there are so few sentences), the bible (which would have made for stilted speech from a chatbot), and the manuals for the operating system itself.
 
 [^local]: Only {{times: after another}} in this document.
 
