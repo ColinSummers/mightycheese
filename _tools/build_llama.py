@@ -678,7 +678,7 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
   p {
     font-family: 'Storyscript', 'Quicksand', cursive;
     font-weight: 400;
-    font-size: clamp(1.3rem, 2.6vw, 3.6rem);
+    font-size: clamp(1.95rem, 3.9vw, 5.4rem);
     line-height: 1.3;
     margin: 0 12.5%;
   }
