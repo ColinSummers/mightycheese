@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mighty Cheese | __PAGE_TITLE__</title>
+<link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&family=Storyscript&display=swap" rel="stylesheet">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #2b1810;
+    color: #9bd4d6;
+    font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6vh 8.4vw 14vh;
+    box-sizing: border-box;
+  }
+  main {
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+  }
+  h1 {
+    font-family: 'Charmonman', 'Quicksand', cursive;
+    font-weight: 700;
+    font-size: clamp(2.2rem, 6.4vw, 7rem);
+    line-height: 1.05;
+    margin: 0 0 0.6em 0;
+    letter-spacing: 0;
+  }
+  h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+  p {
+    font-family: 'Storyscript', 'Quicksand', cursive;
+    font-weight: 400;
+    font-size: clamp(1.95rem, 3.9vw, 5.4rem);
+    line-height: 1.3;
+    margin: 0 12.5%;
+  }
+  @media (max-width: 1100px) {
+    body { justify-content: flex-start; }
+    p { margin: 0; }
+  }
+  p a {
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.18;
+    transition: opacity 0.55s ease, text-shadow 0.55s ease;
+  }
+  p a.lit {
+    opacity: 1;
+    text-shadow: 0 0 18px rgba(155, 212, 214, 0.35);
+  }
+  p a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.08em;
+  }
+  .bottomright {
+    position: absolute;
+    right: 6vw;
+    bottom: 3vh;
+    text-align: right;
+    color: #b04a2a;
+  }
+  a.notablog {
+    color: inherit;
+    font-family: 'Storyscript', 'Quicksand', cursive;
+    font-size: clamp(0.765rem, 1.98vw, 1.89rem);
+    text-decoration: none;
+    opacity: 0.85;
+  }
+  a.notablog:hover { opacity: 1; text-decoration: underline; }
+  .version {
+    margin-top: 0.2em;
+    font-family: 'Quicksand', sans-serif;
+    font-size: clamp(0.38rem, 0.99vw, 0.945rem);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>__HEADLINE__</h1>
+  <p>
+__SENTENCES__
+  </p>
+</main>
+<div class="bottomright">
+  <a class="notablog" href="__FOOTER_LINK__">__FOOTER_LABEL__</a>
+  <div class="version">__VERSION__</div>
+</div>
+<script>
+  window.addEventListener('load', () => {
+    const links = document.querySelectorAll('p a');
+    links.forEach((a, i) => setTimeout(() => a.classList.add('lit'), 400 + i * 1100));
+  });
+</script>
+</body>
+</html>
