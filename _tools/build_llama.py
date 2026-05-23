@@ -63,6 +63,8 @@ def sentence_starters(body: str) -> Counter[str]:
     text = (text.replace("“", '"').replace("”", '"')
                 .replace("‘", "'").replace("’", "'"))
     text = re.sub(r"\s+", " ", text).strip()
+    # Replace dots in abbreviations with the visually identical ONE DOT LEADER
+    # (U+2024) so the sentence-splitting regex doesn't treat "e.g." as a boundary.
     for a in ABBREVS:
         text = text.replace(a, a.replace(".", "․"))
     parts = re.split(r"(?<=[.?!])[\"']?\s+", text)
@@ -211,7 +213,7 @@ def render_body(body_src: str, order: list[str]) -> str:
             cap = f"<figcaption>{inline(alt)}</figcaption>" if alt else ""
             blocks.append(f'<figure><img src="{src}" alt="{html.escape(alt)}">{cap}</figure>')
         else:
-            blocks.append(f"<p>{inline(block.replace(chr(10), ' '))}</p>")
+            blocks.append(f"<p>{inline(block.replace('\n', ' '))}</p>")
     return "\n".join(blocks)
 
 
@@ -530,7 +532,7 @@ def prev_map() -> dict[str, Path]:
     return m
 
 
-def build(md_path: Path) -> Path | None:
+def build(md_path: Path, prev: dict[str, Path]) -> Path | None:
     src = md_path.read_text(encoding="utf-8")
     src = src.replace("\r\n", "\n").replace("\f", "")
 
@@ -576,7 +578,7 @@ def build(md_path: Path) -> Path | None:
 
     title = first_heading(src)
     out_name = md_path.with_suffix(".html").name
-    prev_src = prev_map().get(out_name)
+    prev_src = prev.get(out_name)
     if prev_src:
         prev_label = first_heading(prev_src.read_text(encoding="utf-8"))
         prev_href = prev_src.with_suffix(".html").name
@@ -801,12 +803,13 @@ def main(argv: list[str]) -> int:
     if not targets:
         print("nothing to build", file=sys.stderr)
         return 1
+    prev = prev_map()
     failed = 0
     for p in targets:
         if p.name == "index.md":
             out = build_index(p)
         else:
-            out = build(p)
+            out = build(p, prev)
         if out is None:
             failed += 1
         else:

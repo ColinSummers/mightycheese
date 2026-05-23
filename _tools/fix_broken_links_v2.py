@@ -8,13 +8,13 @@ then applies the new per-link dialog approach.
 
 import re
 import hashlib
-import html as htmlmod
+import html
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
 VOLTADAY = BASE / 'cts' / 'voltaday'
-XML_PATH = BASE / 'voltaday.WordPress.2026-05-16.xml'
 
 DEAD_URLS = [
     'http://twitter.com',
@@ -77,7 +77,7 @@ def anchor_id(url):
 
 def make_dialog(url):
     aid = anchor_id(url)
-    escaped = htmlmod.escape(url)
+    escaped = html.escape(url)
     return f'''<div id="{aid}" class="broken-link-dialog">
   <div class="broken-link-dialog-box">
     <p><strong>Broken Link</strong></p>
@@ -88,9 +88,9 @@ def make_dialog(url):
 </div>'''
 
 
-def parse_wp_posts():
+def parse_wp_posts(xml_path):
     """Parse WordPress export and return {slug: content} mapping."""
-    tree = ET.parse(XML_PATH)
+    tree = ET.parse(xml_path)
     root = tree.getroot()
     ns = {'wp': 'http://wordpress.org/export/1.2/'}
     posts = {}
@@ -178,8 +178,14 @@ def fix_file(fpath, wp_posts):
 
 
 def main():
-    wp_posts = parse_wp_posts()
-    print(f'Parsed {len(wp_posts)} posts from WordPress export')
+    candidates = sorted(BASE.glob('voltaday.WordPress.*.xml'))
+    if not candidates:
+        print(f'No voltaday.WordPress.*.xml found in {BASE}', file=sys.stderr)
+        return 1
+    xml_path = candidates[-1]
+
+    wp_posts = parse_wp_posts(xml_path)
+    print(f'Parsed {len(wp_posts)} posts from {xml_path.name}')
 
     count = 0
     unmatched = []
@@ -190,12 +196,6 @@ def main():
                 print(f'  Fixed: {fpath.name}')
             else:
                 unmatched.append(fpath.name)
-
-    # Also fix index pages
-    for fpath in sorted(VOLTADAY.glob('*.html')):
-        if '#broken-link' in fpath.read_text():
-            # Index pages don't have slugs matching WP posts, skip
-            pass
 
     if unmatched:
         print(f'\n  Could not fix: {", ".join(unmatched)}')

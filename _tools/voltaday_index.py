@@ -4,11 +4,11 @@
 import xml.etree.ElementTree as ET
 import re
 import html
+import sys
 from pathlib import Path
 from datetime import datetime
 
 BASE = Path(__file__).resolve().parent.parent
-XML_PATH = BASE / 'voltaday.WordPress.2026-05-16.xml'
 OUT_DIR = BASE / 'cts' / 'voltaday'
 MEDIA_PREFIX = '../../media/voltaday'
 
@@ -20,8 +20,8 @@ PAGE_GROUPS = [
 ]
 
 
-def parse_posts():
-    tree = ET.parse(XML_PATH)
+def parse_posts(xml_path):
+    tree = ET.parse(xml_path)
     root = tree.getroot()
     ns = {'wp': 'http://wordpress.org/export/1.2/'}
     posts = []
@@ -138,7 +138,7 @@ def make_nav(page_idx):
 PAGES_NAV = '<p class="voltaday-pages"><strong>Blog</strong> | <a href="about.html">About</a> | <a href="cars.html">Cars</a> | <a href="test-drives.html">Test Drives</a></p>'
 
 
-def make_page(filename, page_title, cards_html, page_idx):
+def make_page(page_title, cards_html, page_idx):
     nav_bottom = make_nav(page_idx)
     nav_top = make_nav(page_idx) if page_idx > 0 else ''
     pages_nav = PAGES_NAV if page_idx == 0 else ''
@@ -181,13 +181,19 @@ def make_page(filename, page_title, cards_html, page_idx):
 
 
 def main():
-    posts = parse_posts()
-    print(f'Parsed {len(posts)} posts')
+    candidates = sorted(BASE.glob('voltaday.WordPress.*.xml'))
+    if not candidates:
+        print(f'No voltaday.WordPress.*.xml found in {BASE}', file=sys.stderr)
+        return 1
+    xml_path = candidates[-1]
+
+    posts = parse_posts(xml_path)
+    print(f'Parsed {len(posts)} posts from {xml_path.name}')
 
     for idx, (filename, title, filter_fn) in enumerate(PAGE_GROUPS):
         page_posts = [p for p in posts if filter_fn(p['date'][:10])]
         cards = '\n'.join(make_card(p) for p in page_posts)
-        page_html = make_page(filename, title, cards, idx)
+        page_html = make_page(title, cards, idx)
         out_path = OUT_DIR / filename
         out_path.write_text(page_html)
         print(f'  {filename}: {len(page_posts)} entries')
