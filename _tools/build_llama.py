@@ -653,21 +653,22 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
   body {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    padding: 6vh 8.4vw;
+    padding: 6vh 8.4vw 14vh;
     box-sizing: border-box;
   }
   main {
     width: 100%;
     max-width: 1400px;
+    margin: auto;
   }
   h1 {
     font-family: 'Charmonman', 'Quicksand', cursive;
     font-weight: 700;
-    font-size: clamp(2.34rem, 8.1vw, 8.1rem);
+    font-size: clamp(2.2rem, 6.4vw, 7rem);
     line-height: 1.05;
-    margin: 0 0 0.8em 0;
+    margin: 0 0 0.6em 0;
     letter-spacing: 0;
   }
   h1 span {
@@ -677,9 +678,13 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
   p {
     font-family: 'Storyscript', 'Quicksand', cursive;
     font-weight: 400;
-    font-size: clamp(1.7rem, 4.4vw, 4.2rem);
-    line-height: 1.35;
+    font-size: clamp(1.3rem, 2.6vw, 3.6rem);
+    line-height: 1.3;
     margin: 0 12.5%;
+  }
+  @media (max-width: 1100px) {
+    body { justify-content: flex-start; }
+    p { margin: 0; }
   }
   p a {
     color: inherit;
@@ -697,7 +702,7 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
     text-underline-offset: 0.08em;
   }
   .bottomright {
-    position: fixed;
+    position: absolute;
     right: 6vw;
     bottom: 3vh;
     text-align: right;
