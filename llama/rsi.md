@@ -1,1 +1,0 @@
-/Users/colin/Library/Mobile Documents/iCloud~com~coderforart~One-Markdown/Documents/llama/rsi.md
