@@ -1,3 +1,3 @@
-# .md sources live in iCloud OneMarkdown; llama/*.md are local symlinks
+# .md sources live in iCloud OneMarkdown; llama/markdown/*.md are local symlinks
 # to that iCloud location and would break on the GitHub Pages runner.
-llama/*.md
+llama/markdown/

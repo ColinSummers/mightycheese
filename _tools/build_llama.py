@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Build llama/*.html sub-pages from llama/*.md (except index.md).
+"""Build llama/*.html sub-pages from llama/markdown/*.md (except index.md).
 
-Run after editing any markdown in llama/. The index page is hand-maintained.
+Run after editing any markdown in llama/markdown/. The index page is hand-maintained.
 
 Supports the subset of markdown actually used in this section:
   - # / ## headings
@@ -25,6 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LLAMA = ROOT / "llama"
+MD_DIR = LLAMA / "markdown"
 
 FN_DEF = re.compile(r"^\[\^([\w-]+)\]:[ \t]*(.*)$", re.MULTILINE)
 FN_REF = re.compile(r"\[\^([\w-]+)\]")
@@ -517,9 +518,9 @@ META_HINT = re.compile(r"^<!--\s*([\w-]+)\s*:\s*(.+?)\s*-->\s*$", re.MULTILINE)
 
 
 def prev_map() -> dict[str, Path]:
-    """Build {next-target.html: source-md-path} from all .md files in LLAMA."""
+    """Build {next-target.html: source-md-path} from all .md files in MD_DIR."""
     m: dict[str, Path] = {}
-    for p in LLAMA.glob("*.md"):
+    for p in MD_DIR.glob("*.md"):
         if p.name == "index.md":
             continue
         text = p.read_text(encoding="utf-8")
@@ -574,7 +575,8 @@ def build(md_path: Path) -> Path | None:
     )
 
     title = first_heading(src)
-    prev_src = prev_map().get(md_path.with_suffix(".html").name)
+    out_name = md_path.with_suffix(".html").name
+    prev_src = prev_map().get(out_name)
     if prev_src:
         prev_label = first_heading(prev_src.read_text(encoding="utf-8"))
         prev_href = prev_src.with_suffix(".html").name
@@ -606,7 +608,7 @@ def build(md_path: Path) -> Path | None:
         )
     elif next_href:
         if not next_label:
-            next_md = LLAMA / Path(next_href).with_suffix(".md").name
+            next_md = MD_DIR / Path(next_href).with_suffix(".md").name
             next_label = first_heading(next_md.read_text(encoding="utf-8")) if next_md.exists() else next_href
         next_html = (
             f'<nav class="next"><span class="prim-line">'
@@ -629,7 +631,7 @@ def build(md_path: Path) -> Path | None:
         .replace("__NEXT__", next_html)
     )
 
-    out = md_path.with_suffix(".html")
+    out = LLAMA / md_path.with_suffix(".html").name
     out.write_text(page, encoding="utf-8")
     return out
 
@@ -789,13 +791,13 @@ def build_index(md_path: Path) -> Path:
         .replace("__VERSION__", html.escape(meta.get("version", "")))
     )
 
-    out = md_path.with_suffix(".html")
+    out = LLAMA / md_path.with_suffix(".html").name
     out.write_text(page, encoding="utf-8")
     return out
 
 
 def main(argv: list[str]) -> int:
-    targets = [Path(a) for a in argv[1:]] if len(argv) > 1 else sorted(LLAMA.glob("*.md"))
+    targets = [Path(a) for a in argv[1:]] if len(argv) > 1 else sorted(MD_DIR.glob("*.md"))
     if not targets:
         print("nothing to build", file=sys.stderr)
         return 1
