@@ -6,7 +6,6 @@ Resolves {{times:}} and {{starters:}} template placeholders from the
 markdown sources, strips images, and renders endnotes per essay.
 """
 
-import math
 import re
 import subprocess
 import sys
@@ -16,17 +15,25 @@ from pathlib import Path
 MD_DIR = Path(__file__).resolve().parent.parent / "llama" / "markdown"
 OUTPUT = Path.home() / "Desktop" / "llama-essays.pdf"
 
-ORDER = [
-    "index.md",
-    "not-ai.md",
-    "not-a-luddite.md",
-    "history.md",
-    "rsi.md",
-    "greedy-people.md",
-    "flying-llamas.md",
-    "mistakes.md",
-    "not-a-blog.md",
-]
+LINK_RE = re.compile(r"^\s*-\s*\[[^\]]+\]\(([^)]+)\.html\)", re.MULTILINE)
+FOOTER_RE = re.compile(r"<!--\s*footer-link:\s*(\S+\.html)\s*-->")
+
+
+def essay_order() -> list[str]:
+    """Read link order from index.md: index first, then linked essays,
+    then the footer-link page, then any remaining .md files."""
+    index = MD_DIR / "index.md"
+    src = index.read_text(encoding="utf-8")
+    linked = [m.group(1) + ".md" for m in LINK_RE.finditer(src)]
+    footer = FOOTER_RE.search(src)
+    if footer:
+        linked.append(footer.group(1).replace(".html", ".md"))
+    order = ["index.md"] + linked
+    seen = set(order)
+    for p in sorted(MD_DIR.glob("*.md")):
+        if p.name not in seen:
+            order.append(p.name)
+    return order
 
 ABBREVS = [
     "A.I.", "F. Scott", "vol.", "no.", "pp.",
@@ -177,7 +184,7 @@ ul { margin-bottom: 0.8em; }
 
 def build():
     sections = []
-    for filename in ORDER:
+    for filename in essay_order():
         path = MD_DIR / filename
         if not path.exists():
             print(f"Skipping {filename}", file=sys.stderr)

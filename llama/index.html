@@ -80,6 +80,22 @@
     opacity: 0.85;
   }
   a.notablog:hover { opacity: 1; text-decoration: underline; }
+  .hint {
+    text-align: center;
+    margin-top: 2.5em;
+    color: #b04a2a;
+    font-family: 'Storyscript', 'Quicksand', cursive;
+    font-size: clamp(0.765rem, 1.98vw, 1.89rem);
+    opacity: 0;
+    transition: opacity 1.6s ease;
+  }
+  .hint span {
+    display: inline-block;
+    border: 3px solid #b04a2a;
+    padding: 0.25em 0.7em;
+  }
+  .hint.visible { opacity: 0.85; }
+  .hint.gone { opacity: 0; }
   .version {
     margin-top: 0.2em;
     font-family: 'Quicksand', sans-serif;
@@ -97,8 +113,11 @@
     <a href="not-a-luddite.html">You're not a luddite.</a>
     <a href="history.html">Know your history.</a>
     <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a>
-    <a href="greedy-people.html">You are rightfully creeped out by people tring to sell you snake oil.</a>
+    <a href="mistakes.html">It will make terrible mistakes,</a>
+    <a href="flying-llamas.html">so do you really want it flying a plane?</a>
+    <a href="greedy-people.html">You are rightfully creeped out by greedy people selling snake oil.</a>
   </p>
+  <div class="hint"><span>Click a sentence to read more.</span></div>
 </main>
 <div class="bottomright">
   <a class="notablog" href="not-a-blog.html">Not a blog by Colin Summers</a>
@@ -107,7 +126,11 @@
 <script>
   window.addEventListener('load', () => {
     const links = document.querySelectorAll('p a');
+    const last = 400 + (links.length - 1) * 1100;
     links.forEach((a, i) => setTimeout(() => a.classList.add('lit'), 400 + i * 1100));
+    const hint = document.querySelector('.hint');
+    setTimeout(() => hint.classList.add('visible'), last + 2200);
+    setTimeout(() => { hint.classList.remove('visible'); hint.classList.add('gone'); }, last + 6000);
   });
 </script>
 </body>

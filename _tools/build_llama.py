@@ -255,20 +255,23 @@ def validate(src: str, defs: dict[str, str]) -> list[str]:
 META_HINT = re.compile(r"^<!--\s*([\w-]+)\s*:\s*(.+?)\s*-->\s*$", re.MULTILINE)
 
 
-def prev_map() -> dict[str, Path]:
-    """Build {next-target.html: source-md-path} from all .md files in MD_DIR."""
-    m: dict[str, Path] = {}
-    for p in MD_DIR.glob("*.md"):
-        if p.name == "index.md":
-            continue
-        text = p.read_text(encoding="utf-8")
-        for hint in META_HINT.finditer(text):
-            if hint.group(1) == "next":
-                m[hint.group(2).strip()] = p
-    return m
+INDEX_LINK = re.compile(r"^\s*-\s*\[[^\]]+\]\(([^)]+)\.html\)", re.MULTILINE)
+FOOTER_LINK = re.compile(r"<!--\s*footer-link:\s*(\S+)\s*-->")
 
 
-def build(md_path: Path, prev: dict[str, Path]) -> Path | None:
+def page_order() -> list[str]:
+    """Derive sub-page sequence from the links in index.md."""
+    index_src = (MD_DIR / "index.md").read_text(encoding="utf-8")
+    linked = [m.group(1) for m in INDEX_LINK.finditer(index_src)]
+    footer = FOOTER_LINK.search(index_src)
+    if footer:
+        stem = footer.group(1).replace(".html", "")
+        if stem not in linked:
+            linked.append(stem)
+    return linked
+
+
+def build(md_path: Path, order: list[str]) -> Path | None:
     src = md_path.read_text(encoding="utf-8")
     src = src.replace("\r\n", "\n").replace("\f", "")
 
@@ -303,30 +306,31 @@ def build(md_path: Path, prev: dict[str, Path]) -> Path | None:
     body_src = STARTERS.sub(lambda _m: chart_html, body_src)
     defs = {k: STARTERS.sub(lambda _m: chart_html, v) for k, v in defs.items()}
 
-    order: list[str] = []
-    body_html = render_body(body_src, order)
+    fn_order: list[str] = []
+    body_html = render_body(body_src, fn_order)
 
     fn_blocks = "\n".join(
         f'<template data-fn="{html.escape(k)}">{inline(defs[k])}</template>'
-        for k in order
+        for k in fn_order
         if k in defs
     )
 
     title = first_heading(src)
-    out_name = md_path.with_suffix(".html").name
-    prev_src = prev.get(out_name)
-    if prev_src:
-        prev_label = first_heading(prev_src.read_text(encoding="utf-8"))
-        prev_href = prev_src.with_suffix(".html").name
+    stem = md_path.stem
+    idx = order.index(stem) if stem in order else -1
+
+    prev_stem = order[idx - 1] if idx > 0 else None
+    if prev_stem:
+        prev_md = MD_DIR / f"{prev_stem}.md"
+        prev_label = first_heading(prev_md.read_text(encoding="utf-8")) if prev_md.exists() else prev_stem
         back_html = (
-            f'<span class="prim-line">&larr; <a href="{html.escape(prev_href)}">{html.escape(prev_label, quote=False)}</a></span>'
+            f'<span class="prim-line">&larr; <a href="{prev_stem}.html">{html.escape(prev_label, quote=False)}</a></span>'
             f'<span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span>'
         )
     else:
         back_html = '<span class="prim-line">&larr; <a href="index.html">llamas</a></span>'
 
-    next_href = meta.get("next", "")
-    next_label = meta.get("next-label", "")
+    next_stem = order[idx + 1] if 0 <= idx < len(order) - 1 else None
     mail_to = meta.get("mail", "")
     is_not_a_blog = md_path.name == "not-a-blog.md"
     sub_blog = (
@@ -344,13 +348,12 @@ def build(md_path: Path, prev: dict[str, Path]) -> Path | None:
             f'<nav class="next mail"><a href="mailto:{html.escape(mail_to)}" '
             f'aria-label="Email Colin">{envelope_svg}</a></nav>'
         )
-    elif next_href:
-        if not next_label:
-            next_md = MD_DIR / Path(next_href).with_suffix(".md").name
-            next_label = first_heading(next_md.read_text(encoding="utf-8")) if next_md.exists() else next_href
+    elif next_stem:
+        next_md = MD_DIR / f"{next_stem}.md"
+        next_label = first_heading(next_md.read_text(encoding="utf-8")) if next_md.exists() else next_stem
         next_html = (
             f'<nav class="next"><span class="prim-line">'
-            f'<a href="{html.escape(next_href)}">{html.escape(next_label, quote=False)}</a> &rarr;'
+            f'<a href="{next_stem}.html">{html.escape(next_label, quote=False)}</a> &rarr;'
             f'</span>{sub_blog}</nav>'
         )
     elif sub_blog:
@@ -426,13 +429,13 @@ def main(argv: list[str]) -> int:
     if not targets:
         print("nothing to build", file=sys.stderr)
         return 1
-    prev = prev_map()
+    order = page_order()
     failed = 0
     for p in targets:
         if p.name == "index.md":
             out = build_index(p)
         else:
-            out = build(p, prev)
+            out = build(p, order)
         if out is None:
             failed += 1
         else:

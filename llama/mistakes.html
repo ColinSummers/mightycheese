@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mighty Cheese | Not a Blog</title>
+<title>Mighty Cheese | Llamas make mistakes</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   html, body {
     margin: 0;
     padding: 0;
-    background: #faf6ed;
-    color: #b04a2a;
+    background: #9bd4d6;
+    color: #2b1810;
     font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
   }
   body {
@@ -46,7 +46,7 @@
     margin-top: 0.25em;
   }
   nav.back .sub-line .ghost, nav.next .sub-line .ghost {
-    color: #faf6ed;
+    color: #9bd4d6;
     font-size: 1.18em;
   }
   nav.next { text-align: right; }
@@ -222,12 +222,23 @@
 </style>
 </head>
 <body>
-<nav class="back"><span class="prim-line">&larr; <a href="greedy-people.html">Greedy People are Selling Snake Oil</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
-<nav class="next mail"><a href="mailto:colin@mightycheese.com" aria-label="Email Colin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg></a></nav>
+<nav class="back"><span class="prim-line">&larr; <a href="rsi.html">Repetitive Tasks</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
+<nav class="next"><span class="prim-line"><a href="flying-llamas.html">A Long Way to Go</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
 <main>
-<h2>Not a Blog</h2>
-<p>I was writing too much of this down, and sending too much of it to people in email (in reply to simple questions about 'AI'), so I wanted somewhere to park it. As of May 22 2026 I have not released v1.0 so it is hard to picture what this is going to be. But it's not a blog. I am struggling to find through lines, coherence, and a way to keep trimming and and clarifying.</p>
-<p>So this is where I will note when there are updates, and where I might respond to a comment or two I get in email. We'll see.</p>
+<h1>Llamas make mistakes</h1>
+<p>A lot. In general they hallucinate or incorrectly answer prompts 20% of the time. That's a B average. To be sure, C's get degrees, just the same as A+ students, but if you are going to have someone driving you down the highway at 75mph, do you want the guy that got a B on his driving test? "What did a yield sign mean again? How am I meant to go around this traffic circle? Who has right of way here?" Ask five questions and it gets one wrong.</p>
+<p>My intention is not to collect mistakes that the llama spits out at us during this march toward disaster. I am sure there are sites which are doing that, or there soon will be. Do you remember how hysterical all of the "Autocorrect Fail" sites were when autocorrect first hit our phones? So funny. A whole genre of humor. Someone can do that for LLMs, but it doesn't need to be me.</p>
+<p>I'm just going to collect my own experiences. And I do so because I think it is important to understand how wrong an LLM can be, and how much work it is to keep them on track. My first example was from my second week using Claude Code, which I call CC, or Ceecee, since I have a friend name Claude. I also just start it using the command 'code.'</p>
+<p>And I was fooling around building a very thin client for an online community I have been maintaining since 1987. Mostly I was experimenting and seeing what CC could do. Quit a bit, but also with some mistakes. All of the data is backed up four different ways, which is something I learned because I am stupid, so any tool I use is likewise stupid.</p>
+<p>A thin client means I wanted a very simple, small piece of software that did one or two things well. In this case it was pulling public messages down from a server, showing them to the user, and letting the user write new ones. This is not complicated work, I plan carefully, force CC to plan small chunks of work, test and correct throughout the process, and, so far, mostly get what I am looking for. The thin client was not an exception and I was noodling around, adding little features, correcting how things were presented, when we started getting a bug report from a user.</p>
+<p>So I reproduced the error, or thought I did, and put up a new version for the user to download. When the bug report was exactly the same, I wondered if the update had been downloaded correctly and how I would know. So CC and I mapped out a way for the thin client to report its version each time it talked to the server. Most clients these days do most of their communications with the server in plain text. If you are a polite developer you stick to the standards, which is what we did, and we included the version in an x–header: "x-version: 1.0.3'</p>
+<p>We did that and while I tested it, the server kept refusing any of the requests our new client made. When we finally tracked it down in testing, CC admitted that it had made an error in the code and used an em-dash in the x-header name.</p>
+<p>I know. I have bifurcated my audience. Those who are now face-palming or shouting "See?!" at their screen, and those who need a little more explanation.</p>
+<p>The way you make software work is by following rules. Standards. If we don't agree that the first line of your spreadsheet is going to have the column names along the top and then the values following below them, then it will be difficult to get very far with manipulating the data. Standards are the only reason we can have an Internet at all. We have connected all these machines and expect them to talk to one another. To do that, we have to agree on how they will structure their communications.</p>
+<p>The agreement, the standard, is that header names are only allowed to have ASCII characters. It's not important what they are, it's only important to know that it is a limited set of the characters you see on your screen. In fact, the name of a header, x-header or an accepted standard header like To: or From: has to be made up of printable ASCII character numbered 33 to 126. So no spaces. But, extremely importantly: no em-dashes. No accent marks. So plain vanilla it is shocking.</p>
+<p>And CC had ignored the standard. To me this is emblematic of why llamas cannot replace real engineers. The rules for the headers were written in 1977. It is accurate to say that they are foundational to the Internet. Really, I think, to modern software at large. Ignoring it is saying, "There is nothing fundamental that I know or follow."</p>
+<p>If you look in the paragraphs above there is a place I used an em-dash when writing out 'x-header.' It is very unlikely you noticed. But to a computer 'x-header' and 'x–header' are impossibly different. It cannot accept the second. And the llama ignoring that shows that it doesn't have any basic understanding of how computers, which has to include itself, work. Or, if it does somehow contain that knowledge, it ignored it. It discarded that knowledge at a time when keeping it in mind would have made the code work and forgetting it would cost time and energy chasing a stupid bug.</p>
+<p>So now I am a stupid manager of a stupid coding engineer. This is not the dream I was sold. But, at least I know why it happens.</p>
 </main>
 
 <script>
