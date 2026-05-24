@@ -259,19 +259,43 @@ INDEX_LINK = re.compile(r"^\s*-\s*\[[^\]]+\]\(([^)]+)\.html\)", re.MULTILINE)
 FOOTER_LINK = re.compile(r"<!--\s*footer-link:\s*(\S+)\s*-->")
 
 
-def page_order() -> list[str]:
-    """Derive sub-page sequence from the links in index.md."""
+VERSION_HINT = re.compile(r"<!--\s*version:\s*(v[\d.]+)")
+
+
+def page_order() -> tuple[list[str], str | None, str]:
+    """Derive sub-page sequence, footer stem, and version from index.md."""
     index_src = (MD_DIR / "index.md").read_text(encoding="utf-8")
     linked = [m.group(1) for m in INDEX_LINK.finditer(index_src)]
+    footer_stem = None
     footer = FOOTER_LINK.search(index_src)
     if footer:
-        stem = footer.group(1).replace(".html", "")
-        if stem not in linked:
-            linked.append(stem)
-    return linked
+        footer_stem = footer.group(1).replace(".html", "")
+        if footer_stem not in linked:
+            linked.append(footer_stem)
+    ver = VERSION_HINT.search(index_src)
+    version = ver.group(1) if ver else "v0.0"
+    return linked, footer_stem, version
 
 
-def build(md_path: Path, order: list[str]) -> Path | None:
+def word_count() -> int:
+    """Count words across all essay .md files (excluding index)."""
+    total = 0
+    for p in MD_DIR.glob("*.md"):
+        if p.name == "index.md":
+            continue
+        text = p.read_text(encoding="utf-8")
+        text = FN_DEF.sub("", text)
+        text = META_HINT.sub("", text)
+        text = re.sub(r"(?m)^#+\s*", "", text)
+        text = re.sub(r"\[\^[\w-]+\]", "", text)
+        text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+        text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+        total += len(text.split())
+    return total
+
+
+def build(md_path: Path, order: list[str],
+          footer_stem: str | None, version: str) -> Path | None:
     src = md_path.read_text(encoding="utf-8")
     src = src.replace("\r\n", "\n").replace("\f", "")
 
@@ -319,7 +343,8 @@ def build(md_path: Path, order: list[str]) -> Path | None:
     stem = md_path.stem
     idx = order.index(stem) if stem in order else -1
 
-    prev_stem = order[idx - 1] if idx > 0 else None
+    is_footer = stem == footer_stem
+    prev_stem = order[idx - 1] if idx > 0 and not is_footer else None
     if prev_stem:
         prev_md = MD_DIR / f"{prev_stem}.md"
         prev_label = first_heading(prev_md.read_text(encoding="utf-8")) if prev_md.exists() else prev_stem
@@ -360,6 +385,10 @@ def build(md_path: Path, order: list[str]) -> Path | None:
         next_html = f'<nav class="next">{sub_blog}</nav>'
     else:
         next_html = ""
+
+    if is_footer and not version.startswith("v1."):
+        wc = word_count()
+        body_html += f'\n<p>{wc:,} words. {version}</p>'
 
     page = (
         TEMPLATE
@@ -429,13 +458,13 @@ def main(argv: list[str]) -> int:
     if not targets:
         print("nothing to build", file=sys.stderr)
         return 1
-    order = page_order()
+    order, footer_stem, version = page_order()
     failed = 0
     for p in targets:
         if p.name == "index.md":
             out = build_index(p)
         else:
-            out = build(p, order)
+            out = build(p, order, footer_stem, version)
         if out is None:
             failed += 1
         else:
