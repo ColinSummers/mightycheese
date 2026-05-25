@@ -190,12 +190,31 @@ def render_body(body_src: str, order: list[str]) -> str:
         body_src,
     )
 
+    # Extract fenced code blocks before splitting on blank lines.
+    FENCE = re.compile(r"^```\s*\n(.*?)\n```\s*$", re.MULTILINE | re.DOTALL)
+    fenced: list[str] = []
+
+    FENCE_BOLD = re.compile(r"\*\*(.+?)\*\*", re.DOTALL)
+
+    def _stash_fence(m: re.Match) -> str:
+        content = m.group(1)
+        content = FENCE_BOLD.sub(r"<strong>\1</strong>", content)
+        fenced.append(f"<pre>{html.escape(content).replace('&lt;strong&gt;', '<strong>').replace('&lt;/strong&gt;', '</strong>')}</pre>")
+        return f"\n\n__FENCED_{len(fenced) - 1}__\n\n"
+
+    body_src = FENCE.sub(_stash_fence, body_src)
+
     blocks: list[str] = []
     for raw in re.split(r"\n\s*\n", body_src):
         block = raw.strip()
         if not block:
             continue
-        if block.startswith("## "):
+        if block.startswith("__FENCED_") and block.endswith("__"):
+            idx = int(block[9:-2])
+            blocks.append(fenced[idx])
+        elif block.startswith("### "):
+            blocks.append(f"<h3>{inline(block[4:].strip())}</h3>")
+        elif block.startswith("## "):
             blocks.append(f"<h2>{inline(block[3:].strip())}</h2>")
         elif block.startswith("# "):
             blocks.append(f"<h1>{inline(block[2:].strip())}</h1>")

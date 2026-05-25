@@ -27,6 +27,7 @@
     position: fixed;
     bottom: 6vh;
     right: 8.4vw;
+    max-width: 40%;
     font-size: 0.95rem;
   }
   nav.back a, nav.next a {
@@ -64,13 +65,13 @@
     transition: opacity 0.2s ease;
   }
   nav.next.mail a:hover svg { opacity: 1; }
-  @media (max-width: 720px) {
+  @media (max-width: 1100px) {
     nav.back, nav.next {
       position: static;
       max-width: 38em;
       margin: 0 auto 2em;
     }
-    nav.next { text-align: right; }
+    nav.next { text-align: right; margin-top: -1em; }
   }
   main {
     max-width: 38em;
@@ -212,6 +213,17 @@
     font-variant-numeric: tabular-nums;
     opacity: 0.75;
   }
+  pre {
+    font-family: 'SF Mono', Menlo, Consolas, ui-monospace, monospace;
+    font-size: 0.88em;
+    line-height: 1.5;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 0.8em 1em;
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+  pre strong { font-weight: 700; }
   .starter-meta {
     margin-top: 0.7em;
     text-align: center;
@@ -228,7 +240,7 @@
 <h2>Not a Blog</h2>
 <p>I was writing too much of this down, and sending too much of it to people in email (in reply to simple questions about 'AI'), so I wanted somewhere to park it. As of May 22 2026 I have not released v1.0 so it is hard to picture what this is going to be. But it's not a blog. I am struggling to find through lines, coherence, and a way to keep trimming and and clarifying.</p>
 <p>So this is where I will note when there are updates, and where I might respond to a comment or two I get in email. We'll see.</p>
-<p>4,153 words. v0.4</p>
+<p>4,128 words. v0.4</p>
 </main>
 
 <script>

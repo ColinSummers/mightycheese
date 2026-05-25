@@ -27,6 +27,7 @@
     position: fixed;
     bottom: 6vh;
     right: 8.4vw;
+    max-width: 40%;
     font-size: 0.95rem;
   }
   nav.back a, nav.next a {
@@ -64,13 +65,13 @@
     transition: opacity 0.2s ease;
   }
   nav.next.mail a:hover svg { opacity: 1; }
-  @media (max-width: 720px) {
+  @media (max-width: 1100px) {
     nav.back, nav.next {
       position: static;
       max-width: 38em;
       margin: 0 auto 2em;
     }
-    nav.next { text-align: right; }
+    nav.next { text-align: right; margin-top: -1em; }
   }
   main {
     max-width: 38em;
@@ -212,6 +213,17 @@
     font-variant-numeric: tabular-nums;
     opacity: 0.75;
   }
+  pre {
+    font-family: 'SF Mono', Menlo, Consolas, ui-monospace, monospace;
+    font-size: 0.88em;
+    line-height: 1.5;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 0.8em 1em;
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+  pre strong { font-weight: 700; }
   .starter-meta {
     margin-top: 0.7em;
     text-align: center;
@@ -223,7 +235,7 @@
 </head>
 <body>
 <nav class="back"><span class="prim-line">&larr; <a href="rsi.html">Repetitive Tasks</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
-<nav class="next"><span class="prim-line"><a href="flying-llamas.html">A Long Way to Go</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
+<nav class="next"><span class="prim-line"><a href="flying-llamas.html">Flying Llamas</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
 <main>
 <h1>Llamas make mistakes</h1>
 <p>A lot. In general they hallucinate or incorrectly answer prompts 20% of the time.<sup class="fnref"><a href="#" data-fn="hallucination" aria-label="footnote 1">1</a></sup> That's a B average. To be sure, C's get degrees, just the same as A+ students, but if you are going to have someone driving you down the highway at 75mph, do you want the guy that got a B on his driving test? "What did a yield sign mean again? How am I meant to go around this traffic circle? Who has right of way here?" Ask five questions and it gets one wrong.</p>
