@@ -133,17 +133,30 @@ ITALIC = re.compile(r"\*([^*\n]+)\*")
 URL_AUTOLINK = re.compile(r'(?<![">\w/=])(https?://[^\s<>")]+)')
 
 
+def _is_external(url: str) -> bool:
+    return url.startswith("http") and "mightycheese.com" not in url
+
+
+def _target(url: str) -> str:
+    return ' target="_blank"' if _is_external(url) else ""
+
+
 def _autolink_repl(m: re.Match) -> str:
     url = m.group(1)
     trail = ""
     while url and url[-1] in ".,;:!?)":
         trail = url[-1] + trail
         url = url[:-1]
-    return f'<a href="{url}">{url}</a>{trail}'
+    return f'<a href="{url}"{_target(url)}>{url}</a>{trail}'
+
+
+def _link_repl(m: re.Match) -> str:
+    text, url = m.group(1), m.group(2)
+    return f'<a href="{url}"{_target(url)}>{text}</a>'
 
 
 def inline(text: str) -> str:
-    text = LINK.sub(r'<a href="\2">\1</a>', text)
+    text = LINK.sub(_link_repl, text)
     text = URL_AUTOLINK.sub(_autolink_repl, text)
     text = BOLD.sub(r"<strong>\1</strong>", text)
     text = ITALIC.sub(r"<em>\1</em>", text)
@@ -226,7 +239,7 @@ def render_body(body_src: str, order: list[str]) -> str:
             alt, img_src, href = m.group(1), m.group(2), m.group(3)
             cap = f"<figcaption>{inline(alt)}</figcaption>" if alt else ""
             blocks.append(
-                f'<figure><a href="{html.escape(href)}">'
+                f'<figure><a href="{html.escape(href)}"{_target(href)}>'
                 f'<img src="{img_src}" alt="{html.escape(alt)}">'
                 f'</a>{cap}</figure>'
             )
