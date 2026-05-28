@@ -401,9 +401,20 @@ def build(md_path: Path, order: list[str],
             '<path d="M3 7l9 6 9-6" />'
             '</svg>'
         )
+        pdf_svg = (
+            '<svg viewBox="0 0 24 24" aria-hidden="true">'
+            '<path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6z" />'
+            '<path d="M14 2v6h6" />'
+            '<text x="12" y="17" text-anchor="middle" '
+            'font-family="Helvetica,Arial,sans-serif" font-size="6" font-weight="700" '
+            'fill="currentColor" stroke="none">PDF</text>'
+            '</svg>'
+        )
         next_html = (
-            f'<nav class="next mail"><a href="mailto:{html.escape(mail_to)}" '
-            f'aria-label="Email Colin">{envelope_svg}</a></nav>'
+            f'<nav class="next mail">'
+            f'<a href="mailto:{html.escape(mail_to)}" title="Email me">{envelope_svg}</a>'
+            f'<a href="llama-essays.pdf" title="Entire set as PDF" download>{pdf_svg}</a>'
+            f'</nav>'
         )
     elif next_stem:
         next_md = MD_DIR / f"{next_stem}.md"
