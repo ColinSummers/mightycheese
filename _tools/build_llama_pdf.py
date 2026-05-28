@@ -138,10 +138,12 @@ def md_to_html(md_text: str, prefix: str) -> str:
     return html
 
 
-CSS = """\
+PAPER_SIZES = {"letter": "letter", "a4": "A4"}
+
+CSS_TEMPLATE = """\
 @import url('https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 @page {
-    size: letter;
+    size: __PAGE_SIZE__;
     margin: 1in;
 }
 body {
@@ -206,6 +208,9 @@ section.footnotes ol {
     font-size: 24pt;
     margin: 1em 0;
 }
+pre, code {
+    font-size: 10pt;
+}
 sup { font-size: 8pt; }
 ul { margin-bottom: 0.8em; }
 .attribution {
@@ -219,7 +224,8 @@ ul { margin-bottom: 0.8em; }
 """
 
 
-def render_pdf(filenames: list[str], output: Path):
+def render_pdf(filenames: list[str], output: Path, page_size: str = "letter"):
+    css = CSS_TEMPLATE.replace("__PAGE_SIZE__", page_size)
     sections = []
     for filename in filenames:
         path = MD_DIR / filename
@@ -234,7 +240,7 @@ def render_pdf(filenames: list[str], output: Path):
 
     full = f"""<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><style>{CSS}</style></head>
+<head><meta charset="UTF-8"><style>{css}</style></head>
 <body>
 {"".join(sections)}
 </body>
@@ -246,11 +252,14 @@ def render_pdf(filenames: list[str], output: Path):
 
 
 if __name__ == "__main__":
+    size_arg = sys.argv[2].lower() if len(sys.argv) > 2 else "letter"
+    page_size = PAPER_SIZES.get(size_arg, size_arg)
+
     if len(sys.argv) > 1:
         name = sys.argv[1]
         if not name.endswith(".md"):
             name += ".md"
         stem = Path(name).stem
-        render_pdf([name], DESKTOP / f"{stem}.pdf")
+        render_pdf([name], DESKTOP / f"{stem}.pdf", page_size)
     else:
-        render_pdf(essay_order(), DESKTOP / "llama-essays.pdf")
+        render_pdf(essay_order(), DESKTOP / "llama-essays.pdf", page_size)
