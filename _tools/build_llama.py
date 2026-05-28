@@ -497,7 +497,8 @@ def build_index(md_path: Path) -> Path:
 
 
 def main(argv: list[str]) -> int:
-    targets = [Path(a) for a in argv[1:]] if len(argv) > 1 else sorted(MD_DIR.glob("*.md"))
+    full_build = len(argv) <= 1
+    targets = [Path(a) for a in argv[1:]] if not full_build else sorted(MD_DIR.glob("*.md"))
     if not targets:
         print("nothing to build", file=sys.stderr)
         return 1
@@ -512,6 +513,10 @@ def main(argv: list[str]) -> int:
             failed += 1
         else:
             print(f"built {out.relative_to(ROOT)}")
+    if full_build and not failed:
+        from build_llama_pdf import essay_order, render_pdf
+        pdf_out = ROOT / "llama" / "llama-essays.pdf"
+        render_pdf(essay_order(), pdf_out)
     return 1 if failed else 0
 
 
