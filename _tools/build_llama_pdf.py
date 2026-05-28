@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build a single PDF of all llama essays.
+"""Build PDF(s) of llama essays.
+
+Usage:
+    python3 build_llama_pdf.py                # all essays, ordered by index
+    python3 build_llama_pdf.py history.md      # single essay
 
 Uses pandoc (markdown→HTML with footnotes) and weasyprint (HTML→PDF).
 Resolves {{times:}} and {{starters:}} template placeholders from the
@@ -13,7 +17,7 @@ from collections import Counter
 from pathlib import Path
 
 MD_DIR = Path(__file__).resolve().parent.parent / "llama" / "markdown"
-OUTPUT = Path.home() / "Desktop" / "llama-essays.pdf"
+DESKTOP = Path.home() / "Desktop"
 
 LINK_RE = re.compile(r"^\s*-\s*\[[^\]]+\]\(([^)]+)\.html\)", re.MULTILINE)
 FOOTER_RE = re.compile(r"<!--\s*footer-link:\s*(\S+\.html)\s*-->")
@@ -107,6 +111,17 @@ def process_md(path: Path) -> str:
     # Convert .html links to plain text (internal nav links)
     text = re.sub(r"\[([^\]]+)\]\([^)]*\.html\)", r"\1", text)
 
+    # Convert blockquote attribution lines (>*Name or >*Name*) to HTML
+    # so they render cleanly and can be styled separately from the quote.
+    def fix_attribution(m):
+        content = m.group(1)
+        content = content.strip().strip("*").strip()
+        refs = re.findall(r"\[\^[^\]]+\]", content)
+        name = re.sub(r"\[\^[^\]]+\]", "", content).strip().rstrip(",")
+        ref_str = "".join(refs)
+        return f"> <span class='attribution'>{name.upper()}{ref_str}</span>"
+    text = re.sub(r"^>\s*\*([^*].*?)(\*?)$", fix_attribution, text, flags=re.MULTILINE)
+
     return text.strip()
 
 
@@ -118,18 +133,21 @@ def md_to_html(md_text: str, prefix: str) -> str:
     )
     if result.returncode != 0:
         print(f"pandoc error: {result.stderr}", file=sys.stderr)
-    return result.stdout
+    html = result.stdout
+    html = html.replace("<hr />", '<p class="section-break">§</p>')
+    return html
 
 
 CSS = """\
+@import url('https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 @page {
     size: letter;
     margin: 1in;
 }
 body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12pt;
-    line-height: 1.5;
+    font-family: 'Nunito', 'Avenir Next', 'Avenir', system-ui, sans-serif;
+    font-size: 14pt;
+    line-height: 1.25;
     color: #1a1a1a;
 }
 section.essay {
@@ -139,16 +157,18 @@ section.essay:first-child {
     page-break-before: avoid;
 }
 h1 {
-    font-size: 20pt;
-    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    font-size: 54pt;
+    font-weight: 700;
     margin-top: 0;
     margin-bottom: 0.5em;
 }
 h2 {
-    font-size: 16pt;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 0.5em;
+    font-family: 'Nunito', sans-serif;
+    font-size: 24pt;
+    font-weight: 700;
+    margin-top: 1.2em;
+    margin-bottom: 0.4em;
 }
 p {
     margin-bottom: 0.8em;
@@ -157,10 +177,12 @@ blockquote {
     margin: 1em 1.5em;
     padding-left: 0.75em;
     border-left: 2pt solid #999;
-    font-style: italic;
+    font-family: 'Charmonman', 'Quicksand', cursive;
+    font-size: 24pt;
+    font-style: normal;
 }
 blockquote ul {
-    font-style: italic;
+    font-family: 'Charmonman', 'Quicksand', cursive;
 }
 a {
     color: #1a1a1a;
@@ -171,20 +193,35 @@ section.footnotes {
     padding-top: 0.5em;
     border-top: 1px solid #aaa;
     font-size: 10pt;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 section.footnotes hr { display: none; }
 section.footnotes ol {
     padding-left: 1.5em;
 }
+.section-break {
+    text-align: center;
+    font-family: 'Charmonman', cursive;
+    font-weight: 700;
+    font-size: 24pt;
+    margin: 1em 0;
+}
 sup { font-size: 8pt; }
 ul { margin-bottom: 0.8em; }
+.attribution {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10pt;
+    font-style: normal;
+    letter-spacing: 0.05em;
+    float: right;
+    margin-top: 0.3em;
+}
 """
 
 
-def build():
+def render_pdf(filenames: list[str], output: Path):
     sections = []
-    for filename in essay_order():
+    for filename in filenames:
         path = MD_DIR / filename
         if not path.exists():
             print(f"Skipping {filename}", file=sys.stderr)
@@ -204,9 +241,16 @@ def build():
 </html>"""
 
     from weasyprint import HTML
-    HTML(string=full).write_pdf(str(OUTPUT))
-    print(f"PDF written to {OUTPUT}")
+    HTML(string=full).write_pdf(str(output))
+    print(f"PDF written to {output}")
 
 
 if __name__ == "__main__":
-    build()
+    if len(sys.argv) > 1:
+        name = sys.argv[1]
+        if not name.endswith(".md"):
+            name += ".md"
+        stem = Path(name).stem
+        render_pdf([name], DESKTOP / f"{stem}.pdf")
+    else:
+        render_pdf(essay_order(), DESKTOP / "llama-essays.pdf")
