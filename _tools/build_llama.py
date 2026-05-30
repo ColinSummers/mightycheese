@@ -262,6 +262,43 @@ def first_heading(src: str) -> str:
     return "the llamas"
 
 
+def fix_endnotes(md_path: Path, src: str) -> str:
+    """Reorder endnote definitions to match first-reference order in the body.
+    Warns about orphaned definitions (defined but never referenced).
+    Writes back to the source file only if something changed."""
+    body = FN_DEF.sub("", src)
+    ref_order: list[str] = []
+    for m in FN_REF.finditer(body):
+        key = m.group(1)
+        if key not in ref_order:
+            ref_order.append(key)
+
+    defs: dict[str, str] = {}
+    for m in FN_DEF.finditer(src):
+        defs[m.group(1)] = m.group(0)
+
+    if not defs:
+        return src
+
+    orphans = [k for k in defs if k not in ref_order]
+    for k in orphans:
+        print(f"  {md_path.name}: [^{k}] is defined but never referenced — may belong in another file", file=sys.stderr)
+
+    ordered_keys = [k for k in ref_order if k in defs] + orphans
+    old_keys = list(defs.keys())
+    if ordered_keys == old_keys:
+        return src
+
+    stripped = FN_DEF.sub("", src).rstrip()
+    new_defs = "\n\n".join(defs[k] for k in ordered_keys)
+    new_src = stripped + "\n\n" + new_defs + "\n"
+
+    md_path.write_text(new_src, encoding="utf-8")
+    moved = [k for k, o in zip(ordered_keys, old_keys) if k != o]
+    print(f"  {md_path.name}: reordered endnotes ({', '.join(moved)})", file=sys.stderr)
+    return new_src
+
+
 def validate(src: str, defs: dict[str, str]) -> list[str]:
     """Collect issues that would produce a broken document. Caller aborts."""
     issues: list[str] = []
@@ -330,6 +367,7 @@ def build(md_path: Path, order: list[str],
           footer_stem: str | None, version: str) -> Path | None:
     src = md_path.read_text(encoding="utf-8")
     src = src.replace("\r\n", "\n").replace("\f", "")
+    src = fix_endnotes(md_path, src)
 
     meta: dict[str, str] = {}
     for m in META_HINT.finditer(src):

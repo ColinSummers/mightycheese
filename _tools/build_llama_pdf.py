@@ -256,7 +256,7 @@ if __name__ == "__main__":
     page_size = PAPER_SIZES.get(size_arg, size_arg)
 
     if len(sys.argv) > 1:
-        name = sys.argv[1]
+        name = Path(sys.argv[1]).name
         if not name.endswith(".md"):
             name += ".md"
         stem = Path(name).stem
