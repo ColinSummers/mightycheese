@@ -346,21 +346,36 @@ def page_order() -> tuple[list[str], str | None, str]:
     return linked, footer_stem, version
 
 
+def _count_words(p: Path) -> int:
+    text = p.read_text(encoding="utf-8")
+    text = FN_DEF.sub("", text)
+    text = META_HINT.sub("", text)
+    text = re.sub(r"(?m)^#+\s*", "", text)
+    text = re.sub(r"\[\^[\w-]+\]", "", text)
+    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    return len(text.split())
+
+
 def word_count() -> int:
     """Count words across all essay .md files (excluding index)."""
-    total = 0
-    for p in MD_DIR.glob("*.md"):
-        if p.name == "index.md":
+    return sum(
+        _count_words(p)
+        for p in MD_DIR.glob("*.md")
+        if p.name != "index.md"
+    )
+
+
+def per_file_word_counts(order: list[str]) -> list[tuple[str, str, int]]:
+    """Return (stem, title, count) for each essay in index order."""
+    results = []
+    for stem in order:
+        p = MD_DIR / f"{stem}.md"
+        if not p.exists():
             continue
-        text = p.read_text(encoding="utf-8")
-        text = FN_DEF.sub("", text)
-        text = META_HINT.sub("", text)
-        text = re.sub(r"(?m)^#+\s*", "", text)
-        text = re.sub(r"\[\^[\w-]+\]", "", text)
-        text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
-        text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
-        total += len(text.split())
-    return total
+        title = first_heading(p.read_text(encoding="utf-8"))
+        results.append((stem, title, _count_words(p)))
+    return results
 
 
 def build(md_path: Path, order: list[str],
@@ -469,7 +484,16 @@ def build(md_path: Path, order: list[str],
 
     if is_footer and not version.startswith("v1."):
         wc = word_count()
-        body_html += f'\n<p>{wc:,} words. {version}</p>'
+        file_counts = per_file_word_counts(order)
+        rows = "".join(
+            f'<span class="fc-n">{count:,}</span>'
+            f'<span class="fc-t">{html.escape(title, quote=False)}</span>'
+            for _, title, count in file_counts
+        )
+        body_html += (
+            f'\n<p>{wc:,} words. {version}'
+            f'<span class="file-counts">{rows}</span></p>'
+        )
 
     page = (
         TEMPLATE
