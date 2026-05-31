@@ -233,6 +233,16 @@
     white-space: pre-wrap;
   }
   pre strong { font-weight: 700; }
+  .file-counts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 0.6em;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 0.4em;
+  }
+  .fc-n { text-align: right; }
+  .fc-t { text-align: left; }
   .starter-meta {
     margin-top: 0.7em;
     text-align: center;
@@ -249,9 +259,9 @@
 <h2>Llamas make mistakes</h2>
 <p>A lot. In general they hallucinate or incorrectly answer prompts 20% of the time.<sup class="fnref"><a href="#" data-fn="hallucination" aria-label="footnote 1">1</a></sup> That's a B average. To be sure, C's get degrees, just the same as A+ students, but if you are going to have someone driving you down the highway at 75mph, do you want the guy that got a B on his driving test? "What did a yield sign mean again? How am I meant to go around this traffic circle? Who has right of way here?" Ask five questions and it gets one wrong.</p>
 <p>My intention is <em>not</em> to collect mistakes that the llama spits out at us during this march toward disappointment. I am sure there are sites which are doing that, or there soon will be. Do you remember how hysterical all of the "Autocorrect Fail" sites were when autocorrect first hit our phones? So funny. A whole genre of humor.<sup class="fnref"><a href="#" data-fn="autocorrect" aria-label="footnote 2">2</a></sup> Someone can do that for LLMs, but it doesn't need to be me.</p>
-<p>I'm just going to collect my own experiences. And I do so because I think it is important to understand <em>how</em> wrong an LLM can be, and how much work it is to keep them on track, to make them useful. My first example<sup class="fnref"><a href="#" data-fn="first-example" aria-label="footnote 3">3</a></sup> was from my second week using Claude Code, which I call CC, or Ceecee, since I have a friend name Claude. I also invoke it using the command 'code,' no name.</p>
+<p>I'm just going to collect my own experiences. And I do so because I think it is important to understand <em>how</em> wrong an LLM can be, and how much work it is to keep them on track, to make them useful. My first example<sup class="fnref"><a href="#" data-fn="first-example" aria-label="footnote 3">3</a></sup> was from my second week using Claude Code, which I call CC, or Ceecee, since I have a friend named Claude. I also invoke it using the command 'code,' no name.</p>
 <p><strong>Character Assassination</strong></p>
-<p>I was fiddling around building a very thin client<sup class="fnref"><a href="#" data-fn="thin-client" aria-label="footnote 4">4</a></sup>. Mostly I was experimenting and seeing what CC could do. Quit a bit, but also with some mistakes. All of the data is backed up four different ways, which is something I learned because <em>I</em> am stupid,<sup class="fnref"><a href="#" data-fn="stupid" aria-label="footnote 5">5</a></sup> so any tool I use is likewise stupid.</p>
+<p>I was fiddling around building a very thin client<sup class="fnref"><a href="#" data-fn="thin-client" aria-label="footnote 4">4</a></sup>. Mostly I was experimenting and seeing what CC could do. Quite a bit, but also with some mistakes. All of the data is backed up four different ways, which is something I learned because <em>I</em> am stupid,<sup class="fnref"><a href="#" data-fn="stupid" aria-label="footnote 5">5</a></sup> so any tool I use is likewise stupid.</p>
 <p>The thin client is a small piece of software that would do one or two things cleanly. In this case it was pulling messages down from a server, showing them to the user, and letting the user write new ones. This is not complicated work, I plan carefully, force CC to plan small chunks of work, test and correct throughout the process, and, so far, mostly get what I am looking for. The thin client was not an exception and I was noodling around, adding little features, correcting how things were presented, when we started getting a bug report from a user.</p>
 <p>So I reproduced the error, or thought I did, and put up a new version for the user to download. When the bug report was exactly the same, I wondered if the update had been downloaded correctly and how I would know. So CC and I mapped out a way for the thin client to report its version each time it talked to the server. Most clients these days do most of their communications with the server in plain text. If you are a polite developer<sup class="fnref"><a href="#" data-fn="polite" aria-label="footnote 6">6</a></sup> you stick to the standards, which is what we did, and we included the version in an x–header: "x-version: 1.0.3'</p>
 <p>We did that and while I tested it, the server kept refusing any of the requests our new client made. When we finally tracked it down in testing, CC admitted that it had made an error in the code and used an em-dash in the x-header name, so all subsequent requests were ignored.</p>
