@@ -458,8 +458,7 @@ def build(md_path: Path, order: list[str],
     else:
         next_html = ""
 
-    # Word counts are a pre-release feature; suppress once essays reach v1.
-    if is_footer and not version.startswith("v1."):
+    if is_footer:
         wc = word_count()
         file_counts = per_file_word_counts(order)
         rows = "".join(
