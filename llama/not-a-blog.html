@@ -93,7 +93,7 @@
     margin: 0 0 0.7em 0;
   }
   h1 { font-size: clamp(3rem, 8vw, 6.2rem); }
-  h2 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); }
+  h2 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); word-wrap: break-word; }
   p {
     font-size: clamp(1.2rem, 1.8vw, 1.55rem);
     line-height: 1.55;
@@ -257,14 +257,16 @@
 <nav class="next mail"><a href="mailto:colin@mightycheese.com" title="Email me"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg></a><a href="llama-essays.pdf" title="Entire set as PDF" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6z" /><path d="M14 2v6h6" /><text x="12" y="17" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="6" font-weight="700" fill="currentColor" stroke="none">PDF</text></svg></a></nav>
 <main>
 <h2>Not a Blog</h2>
-<p>I was writing too much of this down, and sending too much of it to people in email (in reply to simple questions about 'AI'), so I wanted somewhere to park it. As of May 22 2026 I have not released v1.0 so it is hard to picture what this is going to be. But it's not a blog. I am struggling to find through lines, coherence, and a way to keep trimming and clarifying.</p>
-<p>The conclusions here seemed too difficult to tie together. Splitting it into these separate pieces that tie back to the one paragraph feels most natural.</p>
+<p>I was writing too much of this down, and sending too much of it to people in email (in reply to simple questions about 'AI'), so I wanted somewhere to park it. This is a moment in history that feels like it should have multiple viewpoints recorded and so I am putting mine, on this one tiny subject, here.</p>
+<p>As of May 22 2026 I have not released v1.0 so it is hard to picture what this is going to be. But it's not a blog. I am struggling to find through lines, coherence, and a way to keep trimming and clarifying.</p>
+<p>The conclusions here were difficult to tie together. Splitting it into these separate pieces that tie back to the one paragraph feels most natural.</p>
 <p>So this is where I will note when there are updates, and where I might respond to a comment or two I get in email. We'll see.</p>
 <p>I imagine my audience is half a dozen people. But out of those there's certainly one (you know who you are) saying, "I want to read all this, but they say I can only bring <em>paper</em> to prison." No worries, there's a link to a PDF right there. See you on the other side.</p>
-<p>4,914 words. v0.5<span class="file-counts"><span class="fc-n">1,020</span><span class="fc-t">It is not A.I.</span><span class="fc-n">161</span><span class="fc-t">You're not a Luddite</span><span class="fc-n">1,163</span><span class="fc-t">Know your history.</span><span class="fc-n">601</span><span class="fc-t">Repetitive Tasks</span><span class="fc-n">964</span><span class="fc-t">Llamas make mistakes</span><span class="fc-n">788</span><span class="fc-t">Flying Llamas</span><span class="fc-n">33</span><span class="fc-t">Greedy People are Selling Snake Oil</span><span class="fc-n">184</span><span class="fc-t">Not a Blog</span></span></p>
+<p class="dev-wc" hidden>5,089 words. v0.5<span class="file-counts"><span class="fc-n">1,066</span><span class="fc-t">It is not A.I.</span><span class="fc-n">187</span><span class="fc-t">You're not a Luddite</span><span class="fc-n">1,189</span><span class="fc-t">Know your history.</span><span class="fc-n">601</span><span class="fc-t">Repetitive Tasks</span><span class="fc-n">964</span><span class="fc-t">Llamas make mistakes</span><span class="fc-n">786</span><span class="fc-t">Flying Llamas</span><span class="fc-n">86</span><span class="fc-t">Greedy People are Selling Snake Oil</span><span class="fc-n">210</span><span class="fc-t">Not a Blog</span></span></p>
 </main>
 
 <script>
+  if (location.hostname === 'localhost') { const d = document.querySelector('.dev-wc'); if (d) d.hidden = false; }
   const popup = document.createElement('div');
   popup.id = 'fnpop';
   popup.hidden = true;

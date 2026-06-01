@@ -93,7 +93,7 @@
     margin: 0 0 0.7em 0;
   }
   h1 { font-size: clamp(3rem, 8vw, 6.2rem); }
-  h2 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); }
+  h2 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); word-wrap: break-word; }
   p {
     font-size: clamp(1.2rem, 1.8vw, 1.55rem);
     line-height: 1.55;
@@ -254,13 +254,17 @@
 </head>
 <body>
 <nav class="back"><span class="prim-line">&larr; <a href="flying-llamas.html">Flying Llamas</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
-<nav class="next"><span class="prim-line"><a href="not-a-blog.html">Not a Blog</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
+<nav class="next"><span class="prim-line"><a href="not-a-blog.html">Not a Blog</a> &rarr;</span></nav>
 <main>
 <h2>Greedy People are Selling Snake Oil</h2>
 <p>People should stop referring to Elon Musk as the world's richest man and start properly tagging him as the world's greediest man. That's so much more accurate.</p>
+<p>Google knew years ago about <em>all</em> of the bad things the llamas would bring. They fired their Cassandra and charged ahead.</p>
+<p>You've read your <a href="history">history</a> so you know about <a href="https://en.wikipedia.org/wiki/Rob_Pike" target="_blank">rob pike</a>. You might wonder how the person who birthed Mark V Shaney feels about ChatGPT, Claude, Gemini and the rest. Wonder no more.</p>
+<figure><img src="rob-claude.jpeg" alt="Posted on BlueSky Dec 26 2025"><figcaption>Posted on BlueSky Dec 26 2025</figcaption></figure>
 </main>
 
 <script>
+  if (location.hostname === 'localhost') { const d = document.querySelector('.dev-wc'); if (d) d.hidden = false; }
   const popup = document.createElement('div');
   popup.id = 'fnpop';
   popup.hidden = true;

@@ -93,7 +93,7 @@
     margin: 0 0 0.7em 0;
   }
   h1 { font-size: clamp(3rem, 8vw, 6.2rem); }
-  h2 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); }
+  h2 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); word-wrap: break-word; }
   p {
     font-size: clamp(1.2rem, 1.8vw, 1.55rem);
     line-height: 1.55;
@@ -257,11 +257,13 @@
 <nav class="next"><span class="prim-line"><a href="history.html">Know your history.</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
 <main>
 <h2>You're not a Luddite</h2>
-<p>And, most likely, you misunderstand who the Luddites were. You can go read about it yourself, but the shortest version is simple: There were English villages in the early nineteenth century where everyone made a living weaving wool into fabric. They used machines themselves all the time. They were skilled. Then the factory owners brought in machines that could be run by children (that was allowed back then), and without apprenticeships. They were making worse products but for a lot less cost and families were starving.</p>
-<p>Oh, maybe you <em>are</em> a Luddite because you don't want to see real skilled work replaced with a bunch of A.I. slop that the bosses then try to sell as an equivilent product. The bosses want to 'eliminate work,' but really it is coming down to eliminating the wages they were paid. They want their companies to run more efficiently, but they want all the profit to go to the owners.</p>
+<p>And, most likely, you misunderstand who the Luddites were. You can go read about it yourself, but the shortest version is simple. There were English villages in the early nineteenth century where everyone made a living weaving wool into fabric. They used machines themselves all the time. They were skilled. Then the factory owners brought in machines that could be run by children (that was allowed back then), and without apprenticeships. They were making worse products at an undercutting cost, and families were starving.</p>
+<p>Oh, maybe you <em>are</em> a Luddite because you don't want to see real skilled work replaced with a bunch of A.I. slop that the bosses then try to sell as an equivalent product. The bosses want to 'eliminate work,' but really it is coming down to eliminating the wages they were paid. They want their companies to run more efficiently, but they want all the profit to go to the owners.</p>
+<p>You use computers. If you use MicroSoft Word you use a spellchecker and a grammar checker. It is extremely unlikely that you are reading this without the Internet.</p>
 </main>
 
 <script>
+  if (location.hostname === 'localhost') { const d = document.querySelector('.dev-wc'); if (d) d.hidden = false; }
   const popup = document.createElement('div');
   popup.id = 'fnpop';
   popup.hidden = true;

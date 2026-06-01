@@ -472,10 +472,11 @@ def build(md_path: Path, order: list[str],
     elif next_stem:
         next_md = MD_DIR / f"{next_stem}.md"
         next_label = first_heading(next_md.read_text(encoding="utf-8")) if next_md.exists() else next_stem
+        next_sub = '' if next_stem == footer_stem else sub_blog
         next_html = (
             f'<nav class="next"><span class="prim-line">'
             f'<a href="{next_stem}.html">{html.escape(next_label, quote=False)}</a> &rarr;'
-            f'</span>{sub_blog}</nav>'
+            f'</span>{next_sub}</nav>'
         )
     elif sub_blog:
         next_html = f'<nav class="next">{sub_blog}</nav>'
@@ -491,7 +492,7 @@ def build(md_path: Path, order: list[str],
             for _, title, count in file_counts
         )
         body_html += (
-            f'\n<p>{wc:,} words. {version}'
+            f'\n<p class="dev-wc" hidden>{wc:,} words. {version}'
             f'<span class="file-counts">{rows}</span></p>'
         )
 
@@ -558,6 +559,108 @@ def build_index(md_path: Path) -> Path:
     return out
 
 
+def build_proof(order: list[str]) -> Path:
+    """Spell-check all essay markdown files, write findings to proof.md."""
+    from datetime import date
+    try:
+        from spellchecker import SpellChecker
+    except ImportError:
+        print("  skipping proof (pyspellchecker not installed)", file=sys.stderr)
+        return None
+
+    spell = SpellChecker()
+    spell.word_frequency.load_words([
+        "chatgpt", "llm", "llms", "llama", "llamas", "chatbot", "chatbots",
+        "ai", "gpt", "openai", "gemini", "claude", "zuckerberg", "zuck",
+        "minsky", "dawkins", "gould", "hominids", "neuro", "metaverse",
+        "metacognition", "dataset", "datasets", "corpora", "regex",
+        "ascii", "utf", "unicode", "wikipedia", "pdf", "html", "css",
+        "https", "http", "href", "github", "ollama", "pytorch", "numpy",
+        "wikipedia", "podcast", "podcasts", "luddite", "luddites",
+        "luddism", "epub", "rsi", "cts", "csr", "csrs",
+        "faa", "ntsb", "boeing", "airbus", "mcas", "ergo",
+        "img", "png", "jpeg", "svg", "goatcounter",
+        "mightycheese", "otlstudio", "flyingsummers",
+        "charmonman", "quicksand", "storyscript",
+        "hendrix", "jimi", "shaney", "piper", "aristotle",
+        "heuristical", "heuristicals",
+        "pike", "kernighan", "griesemer", "thompson",
+        "acme", "sam",  # editors by Pike
+        "kneecap", "kneecapped",
+        "cogent", "misidentified", "underspecified",
+        "overcorrecting", "autocompletion",
+        "ceo", "mph", "cc", "tn", "fbo", "alt",
+        "elon", "andrey", "markov", "beatle", "mozart",
+        "bluesky", "googled", "autocorrect", "ceecee",
+        "cafe", "caf",
+    ])
+    # Airport/station codes — all caps, 3–4 chars
+    ICAO_RE = re.compile(r"^[A-Z]{3,4}$")
+
+    STRIP_MD = re.compile(r"""
+        \[\^[\w-]+\]:.*$          |  # footnote defs
+        \[\^[\w-]+\]              |  # footnote refs
+        !\[[^\]]*\]\([^)]+\)      |  # images
+        \[[^\]]*\]\([^)]+\)       |  # links (keep text via later sub)
+        <!--.*?-->                |  # HTML comments
+        \{\{[^}]+\}\}            |  # template tags
+        ^#+\s+                    |  # headings
+        ^\s*>\s*                  |  # blockquote markers
+        [*_`~]                       # inline formatting
+    """, re.MULTILINE | re.VERBOSE)
+    LINK_TEXT = re.compile(r"\[([^\]]+)\]\([^)]+\)")
+    DOUBLE_WORD = re.compile(r"\b(\w+)\s+\1\b", re.IGNORECASE)
+    CONTRACTION_RE = re.compile(r"\w+'(s|t|ll|ve|re|d|m|nt)\b", re.IGNORECASE)
+    WORD_RE = re.compile(r"[a-zA-Z]+")
+
+    out_lines = ["# Llama Essays — Proof", f"Generated {date.today()}", ""]
+
+    for stem in order:
+        p = MD_DIR / f"{stem}.md"
+        if not p.exists():
+            continue
+        raw = p.read_text(encoding="utf-8")
+        lines = raw.splitlines()
+        findings: list[str] = []
+
+        for lineno, line in enumerate(lines, 1):
+            clean = LINK_TEXT.sub(r"\1", line)
+            clean = STRIP_MD.sub("", clean)
+            clean = re.sub(r"&\w+;", "", clean)  # HTML entities
+            clean = re.sub("[‘’‚ʼ`´]", "'", clean)
+            clean = CONTRACTION_RE.sub("", clean)
+
+            words = WORD_RE.findall(clean)
+            words = [w for w in words if len(w) > 2]
+            # Skip airport/ICAO codes
+            orig_case = {w.lower(): w for w in words}
+            words_to_check = [w for w in words if not ICAO_RE.match(orig_case.get(w.lower(), w))]
+            misspelled = spell.unknown(words_to_check)
+            for word in misspelled:
+                findings.append(
+                    f"- **Line {lineno}** — `{word}` — Possible misspelling"
+                )
+
+            m = DOUBLE_WORD.search(clean)
+            if m and m.group(1).lower() not in {"that", "had", "the"}:
+                findings.append(
+                    f"- **Line {lineno}** — `{m.group(0)}` — Repeated word"
+                )
+
+        title = first_heading(raw)
+        out_lines.append(f"## {stem}.md")
+        out_lines.append("")
+        if findings:
+            out_lines.extend(findings)
+        else:
+            out_lines.append("No issues found.")
+        out_lines.append("")
+
+    proof_path = LLAMA / "proof.md"
+    proof_path.write_text("\n".join(out_lines) + "\n", encoding="utf-8")
+    return proof_path
+
+
 def main(argv: list[str]) -> int:
     full_build = len(argv) <= 1
     targets = [Path(a) for a in argv[1:]] if not full_build else sorted(MD_DIR.glob("*.md"))
@@ -579,6 +682,9 @@ def main(argv: list[str]) -> int:
         from build_llama_pdf import essay_order, render_pdf
         pdf_out = ROOT / "llama" / "llama-essays.pdf"
         render_pdf(essay_order(), pdf_out)
+        proof_out = build_proof(order)
+        if proof_out:
+            print(f"proof written to {proof_out.relative_to(ROOT)}")
     return 1 if failed else 0
 
 
