@@ -13,8 +13,9 @@ markdown sources, strips images, and renders endnotes per essay.
 import re
 import subprocess
 import sys
-from collections import Counter
 from pathlib import Path
+
+from llama_shared import ABBREVS, sentence_starters, times_in
 
 MD_DIR = Path(__file__).resolve().parent.parent / "llama" / "markdown"
 DESKTOP = Path.home() / "Desktop"
@@ -39,46 +40,10 @@ def essay_order() -> list[str]:
             order.append(p.name)
     return order
 
-ABBREVS = [
-    "A.I.", "F. Scott", "vol.", "no.", "pp.",
-    "Mr.", "Mrs.", "Dr.", "Ms.", "St.", "Jr.", "Sr.",
-    "e.g.", "i.e.", "etc.", "U.S.", "U.K.",
-]
 TIMES_RE = re.compile(r"\{\{times:\s*([^}]+?)\s*\}\}")
 STARTERS_RE = re.compile(r"\{\{starters:\s*top10\s*\}\}")
 IMAGE_RE = re.compile(r"!?\[!\[[^\]]*\]\([^)]+\)\]\([^)]+\)|!\[[^\]\n]*\]\([^)]+\)")
 COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
-
-
-def times_in(body: str, phrase: str) -> str:
-    pattern = r"\b" + r"\s+".join(re.escape(w) for w in phrase.split()) + r"\b"
-    n = len(re.findall(pattern, body, re.IGNORECASE))
-    return "once" if n == 1 else f"{n} times"
-
-
-def sentence_starters(body: str) -> Counter:
-    text = body
-    text = re.sub(r"(?m)^\[\^[\w-]+\]:.*$", "", text)
-    text = re.sub(r"\[\^[\w-]+\]", "", text)
-    text = re.sub(r"(?m)^#+\s.*$", "", text)
-    text = re.sub(r"(?m)^>", "", text)
-    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
-    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
-    text = re.sub(r"\[[^\]\n]*\]", "", text)
-    text = text.replace("**", "").replace("*", "")
-    text = (text.replace("“", '"').replace("”", '"')
-                .replace("‘", "'").replace("’", "'"))
-    text = re.sub(r"\s+", " ", text).strip()
-    for a in ABBREVS:
-        text = text.replace(a, a.replace(".", "․"))
-    parts = re.split(r'(?<=[.?!])["\']?\\s+', text)
-    starters = []
-    for s in parts:
-        s = s.strip().strip("\"'")
-        m = re.match(r"([A-Za-z][A-Za-z'\-]*)", s)
-        if m:
-            starters.append(m.group(1))
-    return Counter(starters)
 
 
 def starters_text(body: str) -> str:
@@ -97,16 +62,14 @@ def starters_text(body: str) -> str:
 
 
 def process_md(path: Path) -> str:
-    text = path.read_text(encoding="utf-8")
-    raw = text
-
-    text = IMAGE_RE.sub("", text)
+    original = path.read_text(encoding="utf-8")
+    text = IMAGE_RE.sub("", original)
     text = COMMENT_RE.sub("", text)
 
     def replace_times(m):
-        return times_in(raw, m.group(1))
+        return times_in(original, m.group(1))
     text = TIMES_RE.sub(replace_times, text)
-    text = STARTERS_RE.sub(lambda m: starters_text(raw), text)
+    text = STARTERS_RE.sub(lambda m: starters_text(original), text)
 
     # Convert .html links to plain text (internal nav links)
     text = re.sub(r"\[([^\]]+)\]\([^)]*\.html\)", r"\1", text)

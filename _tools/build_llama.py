@@ -20,8 +20,9 @@ import html
 import math
 import re
 import sys
-from collections import Counter
 from pathlib import Path
+
+from llama_shared import ABBREVS, sentence_starters, times_in
 
 TOOLS = Path(__file__).resolve().parent
 ROOT = TOOLS.parent
@@ -40,44 +41,6 @@ PALETTE_TOP10 = [
     "#3a5a8c", "#6a4a8a", "#a04a7a", "#8a3a3a", "#5a6a4a",
 ]
 PALETTE_RESIDUAL = "#8a7a5a"
-ABBREVS = [
-    "A.I.", "F. Scott", "vol.", "no.", "pp.",
-    "Mr.", "Mrs.", "Dr.", "Ms.", "St.", "Jr.", "Sr.",
-    "e.g.", "i.e.", "etc.", "U.S.", "U.K.",
-]
-
-
-def times_in(body: str, phrase: str) -> str:
-    pattern = r"\b" + r"\s+".join(re.escape(w) for w in phrase.split()) + r"\b"
-    n = len(re.findall(pattern, body, re.IGNORECASE))
-    return "once" if n == 1 else f"{n} times"
-
-
-def sentence_starters(body: str) -> Counter[str]:
-    text = body
-    text = re.sub(r"(?m)^\[\^[\w-]+\]:.*$", "", text)
-    text = re.sub(r"\[\^[\w-]+\]", "", text)
-    text = re.sub(r"(?m)^#+\s.*$", "", text)
-    text = re.sub(r"(?m)^>", "", text)
-    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
-    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
-    text = re.sub(r"\[[^\]\n]*\]", "", text)
-    text = text.replace("**", "").replace("*", "")
-    text = (text.replace("“", '"').replace("”", '"')
-                .replace("‘", "'").replace("’", "'"))
-    text = re.sub(r"\s+", " ", text).strip()
-    # Replace dots in abbreviations with the visually identical ONE DOT LEADER
-    # (U+2024) so the sentence-splitting regex doesn't treat "e.g." as a boundary.
-    for a in ABBREVS:
-        text = text.replace(a, a.replace(".", "․"))
-    parts = re.split(r"(?<=[.?!])[\"']?\s+", text)
-    starters: list[str] = []
-    for s in parts:
-        s = s.strip().strip("\"'")
-        m = re.match(r"([A-Za-z][A-Za-z'\-]*)", s)
-        if m:
-            starters.append(m.group(1))
-    return Counter(starters)
 
 
 def starters_chart(body: str) -> str:
@@ -124,6 +87,8 @@ def starters_chart(body: str) -> str:
         f'<div class="starter-meta">{total} sentences &middot; '
         f'{len(counts)} unique starters</div></div>'
     )
+
+
 IMAGE = re.compile(r"!\[([^\]\n]*)\]\(([^)\s]+)\)")
 LINKED_IMAGE = re.compile(r"\[!\[([^\]\n]*)\]\(([^)\s]+)\)\]\(([^)\s]+)\)")
 LINK = re.compile(r"\[([^\]\n]+)\]\(([^)\s]+)\)")
@@ -181,12 +146,16 @@ def render_blockquote(block: str) -> str:
     return f'<blockquote class="pullquote">{"".join(parts)}</blockquote>'
 
 
-def render_body(body_src: str, order: list[str]) -> str:
+def render_body(body_src: str) -> tuple[str, list[str]]:
+    fn_order: list[str] = []
+    fn_index: dict[str, int] = {}
+
     def ref_sub(m: re.Match) -> str:
         key = m.group(1)
-        if key not in order:
-            order.append(key)
-        n = order.index(key) + 1
+        if key not in fn_index:
+            fn_index[key] = len(fn_order) + 1
+            fn_order.append(key)
+        n = fn_index[key]
         return (
             f'<sup class="fnref">'
             f'<a href="#" data-fn="{key}" aria-label="footnote {n}">{n}</a>'
@@ -210,9 +179,16 @@ def render_body(body_src: str, order: list[str]) -> str:
     FENCE_BOLD = re.compile(r"\*\*(.+?)\*\*", re.DOTALL)
 
     def _stash_fence(m: re.Match) -> str:
-        content = m.group(1)
-        content = FENCE_BOLD.sub(r"<strong>\1</strong>", content)
-        fenced.append(f"<pre>{html.escape(content).replace('&lt;strong&gt;', '<strong>').replace('&lt;/strong&gt;', '</strong>')}</pre>")
+        raw = m.group(1)
+        parts = FENCE_BOLD.split(raw)
+        # parts alternates: text, bold_content, text, bold_content, ...
+        out = []
+        for i, part in enumerate(parts):
+            if i % 2 == 0:
+                out.append(html.escape(part))
+            else:
+                out.append(f"<strong>{html.escape(part)}</strong>")
+        fenced.append(f"<pre>{''.join(out)}</pre>")
         return f"\n\n__FENCED_{len(fenced) - 1}__\n\n"
 
     body_src = FENCE.sub(_stash_fence, body_src)
@@ -249,7 +225,7 @@ def render_body(body_src: str, order: list[str]) -> str:
             blocks.append(f'<figure><img src="{src}" alt="{html.escape(alt)}">{cap}</figure>')
         else:
             blocks.append(f"<p>{inline(block.replace('\n', ' '))}</p>")
-    return "\n".join(blocks)
+    return "\n".join(blocks), fn_order
 
 
 def first_heading(src: str) -> str:
@@ -415,8 +391,7 @@ def build(md_path: Path, order: list[str],
     body_src = STARTERS.sub(lambda _m: chart_html, body_src)
     defs = {k: STARTERS.sub(lambda _m: chart_html, v) for k, v in defs.items()}
 
-    fn_order: list[str] = []
-    body_html = render_body(body_src, fn_order)
+    body_html, fn_order = render_body(body_src)
 
     fn_blocks = "\n".join(
         f'<template data-fn="{html.escape(k)}">{inline(defs[k])}</template>'
@@ -483,6 +458,7 @@ def build(md_path: Path, order: list[str],
     else:
         next_html = ""
 
+    # Word counts are a pre-release feature; suppress once essays reach v1.
     if is_footer and not version.startswith("v1."):
         wc = word_count()
         file_counts = per_file_word_counts(order)
@@ -561,7 +537,7 @@ def build_index(md_path: Path) -> Path:
     return out
 
 
-def build_proof(order: list[str]) -> Path:
+def build_proof(order: list[str]) -> Path | None:
     """Spell-check all essay markdown files, write findings to proof.md."""
     from datetime import date
     try:
@@ -571,31 +547,10 @@ def build_proof(order: list[str]) -> Path:
         return None
 
     spell = SpellChecker()
-    spell.word_frequency.load_words([
-        "chatgpt", "llm", "llms", "llama", "llamas", "chatbot", "chatbots",
-        "ai", "gpt", "openai", "gemini", "claude", "zuckerberg", "zuck",
-        "minsky", "dawkins", "gould", "hominids", "neuro", "metaverse",
-        "metacognition", "dataset", "datasets", "corpora", "regex",
-        "ascii", "utf", "unicode", "wikipedia", "pdf", "html", "css",
-        "https", "http", "href", "github", "ollama", "pytorch", "numpy",
-        "wikipedia", "podcast", "podcasts", "luddite", "luddites",
-        "luddism", "epub", "rsi", "cts", "csr", "csrs",
-        "faa", "ntsb", "boeing", "airbus", "mcas", "ergo",
-        "img", "png", "jpeg", "svg", "goatcounter",
-        "mightycheese", "otlstudio", "flyingsummers",
-        "charmonman", "quicksand", "storyscript",
-        "hendrix", "jimi", "shaney", "piper", "aristotle",
-        "heuristical", "heuristicals",
-        "pike", "kernighan", "griesemer", "thompson",
-        "acme", "sam",  # editors by Pike
-        "kneecap", "kneecapped",
-        "cogent", "misidentified", "underspecified",
-        "overcorrecting", "autocompletion",
-        "ceo", "mph", "cc", "tn", "fbo", "alt",
-        "elon", "andrey", "markov", "beatle", "mozart",
-        "bluesky", "googled", "autocorrect", "ceecee",
-        "cafe", "caf",
-    ])
+    words_file = TOOLS / "proof_known_words.txt"
+    if words_file.exists():
+        known = [w.strip() for w in words_file.read_text().splitlines() if w.strip()]
+        spell.word_frequency.load_words(known)
     # Airport/station codes — all caps, 3–4 chars
     ICAO_RE = re.compile(r"^[A-Z]{3,4}$")
 
@@ -632,11 +587,8 @@ def build_proof(order: list[str]) -> Path:
             clean = re.sub("[‘’‚ʼ`´]", "'", clean)
             clean = CONTRACTION_RE.sub("", clean)
 
-            words = WORD_RE.findall(clean)
-            words = [w for w in words if len(w) > 2]
-            # Skip airport/ICAO codes
-            orig_case = {w.lower(): w for w in words}
-            words_to_check = [w for w in words if not ICAO_RE.match(orig_case.get(w.lower(), w))]
+            words = [w for w in WORD_RE.findall(clean) if len(w) > 2]
+            words_to_check = [w for w in words if not ICAO_RE.match(w)]
             misspelled = spell.unknown(words_to_check)
             for word in misspelled:
                 findings.append(
