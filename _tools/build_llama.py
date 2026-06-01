@@ -524,11 +524,13 @@ def build_index(md_path: Path) -> Path:
         meta[m.group(1)] = m.group(2).strip()
     src = META_HINT.sub("", src).strip()
 
-    headline_lines = [
-        line[2:].strip()
-        for line in src.splitlines()
-        if line.strip().startswith("# ")
-    ]
+    headline_lines = []
+    for line in src.splitlines():
+        s = line.strip()
+        if s.startswith("## "):
+            headline_lines.append(s[3:].strip())
+        elif s.startswith("# "):
+            headline_lines.append(s[2:].strip())
     if not headline_lines:
         headline_lines = [first_heading(src)]
     spans = "".join(f"<span>{html.escape(line)}</span>" for line in headline_lines)
