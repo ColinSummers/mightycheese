@@ -1,5 +1,5 @@
 # Llama Essays — Proof
-Generated 2026-05-31
+Generated 2026-06-03
 
 ## not-ai.md
 
@@ -28,7 +28,11 @@ No issues found.
 
 ## greedy-people.md
 
-No issues found.
+- **Line 5** — `gebru` — Possible misspelling
+- **Line 5** — `tech` — Possible misspelling
+- **Line 5** — `timnit` — Possible misspelling
+- **Line 11** — `tech` — Possible misspelling
+- **Line 13** — `gebru` — Possible misspelling
 
 ## not-a-blog.md
 
