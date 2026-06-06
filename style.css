@@ -517,3 +517,103 @@ footer a { color: var(--gold-light); }
   clip: rect(0,0,0,0);
   border: 0;
 }
+
+/* Gallery grid: direct <a> children as clickable thumbnails */
+.gallery-grid > a {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: 0 1px 4px var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.gallery-grid > a:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+.gallery-grid > a img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================
+   CSS-only lightbox
+   ============================================ */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.lightbox:target {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lightbox-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  text-align: center;
+}
+.lightbox-content img {
+  max-width: 90vw;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 2px;
+}
+.lightbox-close {
+  position: absolute;
+  top: -2.5rem;
+  right: 0;
+  font-size: 1.5rem;
+  color: #999;
+  text-decoration: none;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+}
+.lightbox-close:hover { color: #fff; }
+.lightbox-prev,
+.lightbox-next {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  color: #999;
+  text-decoration: none;
+  padding: 1rem;
+  z-index: 210;
+}
+.lightbox-prev { left: 1rem; }
+.lightbox-next { right: 1rem; }
+.lightbox-prev:hover,
+.lightbox-next:hover { color: #fff; }
+.lightbox-caption {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: #bbb;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 600px) {
+  .lightbox-prev { left: 0.25rem; font-size: 1.5rem; }
+  .lightbox-next { right: 0.25rem; font-size: 1.5rem; }
+}
