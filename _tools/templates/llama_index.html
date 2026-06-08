@@ -21,6 +21,7 @@
     justify-content: center;
     padding: 6vh 8.4vw 14vh;
     box-sizing: border-box;
+    cursor: pointer;
   }
   main {
     width: 100%;
@@ -124,6 +125,12 @@ __SENTENCES__
     const hint = document.querySelector('.hint');
     setTimeout(() => hint.classList.add('visible'), last + 2200);
     setTimeout(() => { hint.classList.remove('visible'); hint.classList.add('gone'); }, last + 6000);
+  });
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (a && !a.href.endsWith('not-ai.html')) return;
+    e.preventDefault();
+    window.location = 'not-ai.html';
   });
 </script>
 <script data-goatcounter="https://colinsummers.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
