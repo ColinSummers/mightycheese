@@ -18,10 +18,8 @@ No issues found.
 - **Line 15** — `caibal` — Possible misspelling
 - **Line 17** — `caibal` — Possible misspelling
 - **Line 21** — `caibal` — Possible misspelling
-- **Line 27** — `evironment` — Possible misspelling
 - **Line 27** — `autocomplete` — Possible misspelling
 - **Line 27** — `arctan` — Possible misspelling
-- **Line 29** — `doctrow` — Possible misspelling
 - **Line 29** — `autocomplete` — Possible misspelling
 - **Line 31** — `caibal` — Possible misspelling
 
@@ -35,22 +33,18 @@ No issues found.
 
 ## greedy-people.md
 
+- **Line 5** — `tech` — Possible misspelling
 - **Line 5** — `gebru` — Possible misspelling
 - **Line 5** — `timnit` — Possible misspelling
-- **Line 5** — `tech` — Possible misspelling
 - **Line 11** — `tech` — Possible misspelling
 - **Line 13** — `gebru` — Possible misspelling
 
 ## caibal.md
 
-- **Line 1** — `caibal` — Possible misspelling
 - **Line 3** — `ronan` — Possible misspelling
 - **Line 5** — `ceos` — Possible misspelling
-- **Line 8** — `amodei` — Possible misspelling
-- **Line 9** — `xai` — Possible misspelling
-- **Line 14** — `palantir` — Possible misspelling
-- **Line 16** — `siloed` — Possible misspelling
-- **Line 22** — `clearview` — Possible misspelling
+- **Line 9** — `amodei` — Possible misspelling
+- **Line 10** — `xai` — Possible misspelling
 
 ## not-a-blog.md
 
