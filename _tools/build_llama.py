@@ -588,6 +588,7 @@ def build_proof(order: list[str]) -> Path | None:
     WORD_RE = re.compile(r"[a-zA-Z]+")
 
     out_lines = ["# Llama Essays — Proof", f"Generated {date.today()}", ""]
+    has_findings = False
 
     for stem in order:
         p = MD_DIR / f"{stem}.md"
@@ -618,16 +619,18 @@ def build_proof(order: list[str]) -> Path | None:
                     f"- **Line {lineno}** — `{m.group(0)}` — Repeated word"
                 )
 
-        title = first_heading(raw)
-        out_lines.append(f"## {stem}.md")
-        out_lines.append("")
         if findings:
+            has_findings = True
+            out_lines.append(f"## {stem}.md")
+            out_lines.append("")
             out_lines.extend(findings)
-        else:
-            out_lines.append("No issues found.")
-        out_lines.append("")
+            out_lines.append("")
 
     proof_path = LLAMA / "proof.md"
+    if not has_findings:
+        if proof_path.exists():
+            proof_path.unlink()
+        return None
     proof_path.write_text("\n".join(out_lines) + "\n", encoding="utf-8")
     return proof_path
 
