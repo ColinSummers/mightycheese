@@ -34,8 +34,8 @@ No issues found.
 ## greedy-people.md
 
 - **Line 5** — `tech` — Possible misspelling
-- **Line 5** — `gebru` — Possible misspelling
 - **Line 5** — `timnit` — Possible misspelling
+- **Line 5** — `gebru` — Possible misspelling
 - **Line 11** — `tech` — Possible misspelling
 - **Line 13** — `gebru` — Possible misspelling
 

@@ -96,6 +96,7 @@ BOLD = re.compile(r"\*\*([^*\n]+)\*\*")
 ITALIC = re.compile(r"\*([^*\n]+)\*")
 # Bare URLs not already inside an href attribute or anchor body.
 URL_AUTOLINK = re.compile(r'(?<![">\w/=])(https?://[^\s<>")]+)')
+CAIBAL_WORD = re.compile(r"\bcaibal\b", re.IGNORECASE)
 
 
 def _is_external(url: str) -> bool:
@@ -126,6 +127,13 @@ def inline(text: str) -> str:
     text = BOLD.sub(r"<strong>\1</strong>", text)
     text = ITALIC.sub(r"<em>\1</em>", text)
     return text
+
+
+def autolink_caibal(body_src: str, stem: str) -> str:
+    """Link first bare 'caibal' on non-caibal pages to caibal.html."""
+    if stem == "caibal":
+        return body_src
+    return CAIBAL_WORD.sub(r"[\g<0>](caibal.html)", body_src, count=1)
 
 
 def render_blockquote(block: str) -> str:
@@ -223,6 +231,14 @@ def render_body(body_src: str) -> tuple[str, list[str]]:
             alt, src = m.group(1), m.group(2)
             cap = f"<figcaption>{inline(alt)}</figcaption>" if alt else ""
             blocks.append(f'<figure><img src="{src}" alt="{html.escape(alt)}">{cap}</figure>')
+        elif all(re.match(r"^\s*[-*]\s+", line) for line in block.splitlines() if line.strip()):
+            items = []
+            for line in block.splitlines():
+                stripped = line.strip()
+                if stripped:
+                    text = re.sub(r"^[-*]\s+", "", stripped)
+                    items.append(f"<li>{inline(text)}</li>")
+            blocks.append("<ul>\n" + "\n".join(items) + "\n</ul>")
         else:
             blocks.append(f"<p>{inline(block.replace('\n', ' '))}</p>")
     return "\n".join(blocks), fn_order
@@ -390,6 +406,8 @@ def build(md_path: Path, order: list[str],
     chart_html = starters_chart(body_src)
     body_src = STARTERS.sub(lambda _m: chart_html, body_src)
     defs = {k: STARTERS.sub(lambda _m: chart_html, v) for k, v in defs.items()}
+
+    body_src = autolink_caibal(body_src, md_path.stem)
 
     body_html, fn_order = render_body(body_src)
 
@@ -621,6 +639,29 @@ def main(argv: list[str]) -> int:
         print("nothing to build", file=sys.stderr)
         return 1
     order, footer_stem, version = page_order()
+
+    if full_build:
+        first_mention = None
+        def_file = None
+        for stem in order:
+            if stem == "caibal":
+                continue
+            p = MD_DIR / f"{stem}.md"
+            if not p.exists():
+                continue
+            src = p.read_text(encoding="utf-8")
+            body = FN_DEF.sub("", src)
+            if first_mention is None and CAIBAL_WORD.search(body):
+                first_mention = stem
+            if any(m.group(1) == "cailbal" for m in FN_DEF.finditer(src)):
+                def_file = stem
+        if def_file and first_mention and def_file != first_mention:
+            print(
+                f"  warning: [^cailbal] endnote is in {def_file}.md "
+                f"but first 'caibal' mention is in {first_mention}.md",
+                file=sys.stderr,
+            )
+
     failed = 0
     for p in targets:
         if p.name == "index.md":

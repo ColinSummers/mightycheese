@@ -101,13 +101,22 @@
   }
   em { font-style: italic; }
   strong { font-weight: 600; }
-  main p a {
+  main ul {
+    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    line-height: 1.55;
+    margin: 0 0 1.1em 0;
+    padding-left: 1.5em;
+  }
+  main li {
+    margin-bottom: 0.35em;
+  }
+  main p a, main li a {
     color: inherit;
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.18em;
   }
-  main p a:hover { background: rgba(43,24,16,0.08); }
+  main p a:hover, main li a:hover { background: rgba(43,24,16,0.08); }
   figure {
     margin: 2.4em 0;
     text-align: center;
@@ -259,7 +268,12 @@
 <h1>Resist the AI Cabal</h1>
 <p>This is the most undercooked of the sections and I hope to fill it out by the end of the week (June 11th deadline). The difficulty is that all of this information can be found elsewhere. If you need to know why Sam Altman is bad news, you can listen to Ronan Farrow (or Elon Musk). If you want to know all the horrible things Elon Musk is responsible for, there is a whole pile of material on the web about that. I don't really need to lay that all out here again, I just want to identify the players, even though they are all known. It is a little like making sure you list all four Beatles.</p>
 <p>The following people are the CEOs pushing the A.I. myth the hardest. The operate organizations operate data fusion and analysis infrastructure at federal scale. They are looking to suck federal tax dollars out of the government and into their pockets at scales similar to the defense contractors.</p>
-<p>- Sam Altman, Open AI - Dario Amodei, Anthropic - Elon Musk, XAi - Larry Ellison, Oracle</p>
+<ul>
+<li>Sam Altman, Open AI</li>
+<li>Dario Amodei, Anthropic</li>
+<li>Elon Musk, XAi</li>
+<li>Larry Ellison, Oracle</li>
+</ul>
 </main>
 
 <script>
