@@ -317,7 +317,10 @@ META_HINT = re.compile(r"^<!--\s*([\w-]+)\s*:\s*(.+?)\s*-->\s*$", re.MULTILINE)
 
 
 INDEX_LINK = re.compile(r"^\s*-\s*\[[^\]]+\]\(([^)]+)\.html\)", re.MULTILINE)
+INDEX_ITEM = re.compile(r"^\s*-\s*\[([^\]]+)\]\(([^)]+)\)", re.MULTILINE)
 FOOTER_LINK = re.compile(r"<!--\s*footer-link:\s*(\S+)\s*-->")
+FOOTER_LABEL = re.compile(r"<!--\s*footer-label:\s*(.+?)\s*-->")
+INDEX_HEADING = re.compile(r"^##?\s+(.+)$", re.MULTILINE)
 
 
 VERSION_HINT = re.compile(r"<!--\s*version:\s*(v[\d.]+)")
@@ -336,6 +339,45 @@ def page_order() -> tuple[list[str], str | None, str]:
     ver = VERSION_HINT.search(index_src)
     version = ver.group(1) if ver else "v0.0"
     return linked, footer_stem, version
+
+
+def sidebar_items() -> tuple[str, list[tuple[str, str]], str, str]:
+    """Return (title, [(href, text), ...], footer_href, footer_label) from index.md."""
+    index_src = (MD_DIR / "index.md").read_text(encoding="utf-8")
+    headings = [m.group(1).strip() for m in INDEX_HEADING.finditer(index_src)]
+    title = " ".join(headings)
+    items = [(m.group(2), m.group(1)) for m in INDEX_ITEM.finditer(index_src)]
+    fl = FOOTER_LINK.search(index_src)
+    footer_href = fl.group(1) if fl else "not-a-blog.html"
+    flab = FOOTER_LABEL.search(index_src)
+    footer_label = flab.group(1) if flab else "Not a blog by Colin Summers"
+    footer_parts = footer_label.split(" by ", 1)
+    return title, items, footer_href, footer_parts
+
+
+def build_sidebar(stem: str) -> str:
+    """Build the sidebar nav HTML for a given page stem."""
+    title, items, footer_href, footer_parts = sidebar_items()
+    parts: list[str] = []
+    for href, text in items:
+        page_stem = href.replace(".html", "")
+        if page_stem == stem:
+            parts.append(f'<span class="current">{html.escape(text, quote=False)}</span>')
+        else:
+            parts.append(f'<a href="{html.escape(href)}">{html.escape(text, quote=False)}</a>')
+    sentences = " ".join(parts)
+    link_label = footer_parts[0] if footer_parts else "Not a blog"
+    byline = f"by {footer_parts[1]}" if len(footer_parts) > 1 else ""
+    lines = [
+        '<nav class="sidebar">',
+        f'  <a class="title" href="index.html">{html.escape(title)}</a>',
+        f'  {sentences}',
+        f'  <a class="notablog" href="{html.escape(footer_href)}">{html.escape(link_label)}</a>',
+    ]
+    if byline:
+        lines.append(f'  <span class="byline">{html.escape(byline)}</span>')
+    lines.append('</nav>')
+    return "\n".join(lines)
 
 
 def _count_words(p: Path) -> int:
@@ -422,25 +464,9 @@ def build(md_path: Path, order: list[str],
     idx = order.index(stem) if stem in order else -1
 
     is_footer = stem == footer_stem
-    prev_stem = order[idx - 1] if idx > 0 and not is_footer else None
-    if prev_stem:
-        prev_md = MD_DIR / f"{prev_stem}.md"
-        prev_label = first_heading(prev_md.read_text(encoding="utf-8")) if prev_md.exists() else prev_stem
-        back_html = (
-            f'<span class="prim-line">&larr; <a href="{prev_stem}.html">{html.escape(prev_label, quote=False)}</a></span>'
-            f'<span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span>'
-        )
-    else:
-        back_html = '<span class="prim-line">&larr; <a href="index.html">llamas</a></span>'
 
-    next_stem = order[idx + 1] if 0 <= idx < len(order) - 1 else None
-    mail_to = meta.get("mail", "")
-    is_not_a_blog = md_path.name == "not-a-blog.md"
-    sub_blog = (
-        '' if is_not_a_blog
-        else '<span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span>'
-    )
-    if mail_to:
+    if is_footer:
+        mail_to = meta.get("mail", "")
         envelope_svg = (
             '<svg viewBox="0 0 24 24" aria-hidden="true">'
             '<rect x="3" y="5" width="18" height="14" rx="2" />'
@@ -456,25 +482,31 @@ def build(md_path: Path, order: list[str],
             'fill="currentColor" stroke="none">PDF</text>'
             '</svg>'
         )
-        next_html = (
-            f'<nav class="next mail">'
-            f'<a href="mailto:{html.escape(mail_to)}" title="Email me">{envelope_svg}</a>'
-            f'<a href="llama-essays.pdf" title="Entire set as PDF" download>{pdf_svg}</a>'
-            f'</nav>'
+        sidebar_html = (
+            '<nav class="sidebar">'
+            '<span class="prim-line">&larr; <a href="index.html">llamas</a></span>'
         )
-    elif next_stem:
-        next_md = MD_DIR / f"{next_stem}.md"
-        next_label = first_heading(next_md.read_text(encoding="utf-8")) if next_md.exists() else next_stem
-        next_sub = '' if next_stem == footer_stem else sub_blog
-        next_html = (
-            f'<nav class="next"><span class="prim-line">'
-            f'<a href="{next_stem}.html">{html.escape(next_label, quote=False)}</a> &rarr;'
-            f'</span>{next_sub}</nav>'
-        )
-    elif sub_blog:
-        next_html = f'<nav class="next">{sub_blog}</nav>'
+        if mail_to:
+            sidebar_html += (
+                f'<a href="mailto:{html.escape(mail_to)}" title="Email me">{envelope_svg}</a>'
+                f'<a href="llama-essays.pdf" title="Entire set as PDF" download>{pdf_svg}</a>'
+            )
+        sidebar_html += '</nav>'
+        bottom_nav = ''
     else:
-        next_html = ""
+        sidebar_html = build_sidebar(stem)
+        _, items, _, _ = sidebar_items()
+        item_stems = [href.replace(".html", "") for href, _ in items]
+        si = item_stems.index(stem) if stem in item_stems else -1
+        if 0 <= si < len(items) - 1:
+            next_href, next_text = items[si + 1]
+            bottom_nav = (
+                f'<p class="bottom-nav">'
+                f'<a href="{html.escape(next_href)}">{html.escape(next_text, quote=False)} &rarr;</a>'
+                f'</p>'
+            )
+        else:
+            bottom_nav = ''
 
     if is_footer:
         wc = word_count()
@@ -496,8 +528,8 @@ def build(md_path: Path, order: list[str],
         .replace("__FOOTNOTES__", fn_blocks)
         .replace("__BG__", colors["bg"])
         .replace("__TEXT__", colors["text"])
-        .replace("__BACK__", back_html)
-        .replace("__NEXT__", next_html)
+        .replace("__SIDEBAR__", sidebar_html)
+        .replace("__BOTTOMNAV__", bottom_nav)
     )
 
     out = LLAMA / md_path.with_suffix(".html").name

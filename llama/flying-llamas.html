@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="view-transition" content="same-origin">
 <title>Mighty Cheese | Flying Llamas</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,77 +15,91 @@
     font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
   }
   body {
-    padding: 6vh 8.4vw;
+    padding: 6vh 4.2vw 6vh 8.4vw;
     box-sizing: border-box;
   }
-  nav.back {
+  nav.sidebar {
     position: fixed;
-    top: 6vh;
+    top: 38vh;
     left: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
+    width: 22vw;
     font-size: 0.95rem;
-    overflow-wrap: break-word;
+    line-height: 1.55;
   }
-  nav.next {
-    position: fixed;
-    bottom: 6vh;
-    right: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
-    font-size: 0.95rem;
-    overflow-wrap: break-word;
-  }
-  nav.back a, nav.next a {
+  nav.sidebar a {
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
-  nav.back .prim-line, nav.next .prim-line {
-    display: block;
-  }
-  nav.back a:hover, nav.next a:hover {
+  nav.sidebar a:hover {
     text-decoration: underline;
   }
-  nav.back .sub-line, nav.next .sub-line {
+  nav.sidebar .current {
+    font-weight: 700;
+  }
+  nav.sidebar .title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.82em;
+    margin-bottom: 1.8em;
+  }
+  nav.sidebar .notablog {
+    display: block;
+    float: right;
+    margin-top: 2.4em;
+  }
+  nav.sidebar .byline {
+    display: block;
+    float: right;
+    clear: right;
     font-size: 0.85em;
     opacity: 0.7;
-    margin-top: 0.25em;
+    margin-top: 0.15em;
   }
-  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
-    color: #9bd4d6;
-    font-size: 1.18em;
+  nav.sidebar .prim-line {
+    display: block;
+    margin-bottom: 1.2em;
   }
-  nav.next { text-align: right; }
-  nav.next.mail {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.6rem;
-  }
-  nav.next.mail a {
-    display: inline-flex;
-    align-items: center;
-  }
-  nav.next.mail svg {
+  nav.sidebar svg {
+    display: block;
     width: 2.4rem;
     height: 2.4rem;
     stroke: currentColor;
     fill: none;
     stroke-width: 1.5;
     opacity: 0.85;
+    margin-top: 0.8em;
     transition: opacity 0.2s ease;
   }
-  nav.next.mail a:hover svg { opacity: 1; }
+  nav.sidebar a:hover svg { opacity: 1; }
   @media (max-width: 1100px) {
-    nav.back, nav.next {
+    nav.sidebar {
       position: static;
-      max-width: 38em;
+      width: auto;
       margin: 0 auto 2em;
+      max-width: 38em;
     }
-    nav.next { text-align: right; margin-top: -1em; }
   }
   main {
     max-width: 38em;
     margin: 0 auto;
+    margin-left: 25vw;
+  }
+  @media (max-width: 1100px) {
+    main {
+      margin-left: auto;
+    }
+  }
+  .bottom-nav {
+    text-align: right;
+    font-size: 0.95rem;
+    margin-top: 3em;
+  }
+  .bottom-nav a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .bottom-nav a:hover {
+    text-decoration: underline;
   }
   h1, h2 {
     font-family: 'Charmonman', 'Quicksand', cursive;
@@ -259,11 +274,30 @@
     font-size: 0.78em;
     opacity: 0.7;
   }
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: 0.4s ease-in both vt-fade-out;
+  }
+  ::view-transition-new(root) {
+    animation: 0.4s ease-out both vt-slide-from-right;
+  }
+  @keyframes vt-slide-from-right {
+    from { transform: translateX(100%); }
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; }
+  }
 </style>
 </head>
 <body>
-<nav class="back"><span class="prim-line">&larr; <a href="mistakes.html">Llamas make mistakes</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
-<nav class="next"><span class="prim-line"><a href="greedy-people.html">Greedy People are Selling Snake Oil</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
+<nav class="sidebar">
+  <a class="title" href="index.html">the llamas are not going to eat your lunch</a>
+  <a href="not-ai.html">It's not A.I.</a> <a href="not-a-luddite.html">You're not a luddite.</a> <a href="history.html">Know your history.</a> <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a> <a href="mistakes.html">It will make terrible mistakes,</a> <span class="current">so do you really want it flying a plane?</span> <a href="greedy-people.html">You are rightfully creeped out by greedy people selling snake oil.</a> <a href="caibal.html">(Resist the AI Cabal.)</a>
+  <a class="notablog" href="not-a-blog.html">Not a blog</a>
+  <span class="byline">by Colin Summers</span>
+</nav>
 <main>
 <h2>Flying Llamas</h2>
 <h3>This is an edited version of a post published June 2, 2023 on my flying blog. The original can be <a href="https://flyingsummers.com/2023/06/02/a-long-way-to-go/" target="_blank">found here</a>.</h3>
@@ -311,6 +345,7 @@ options, including sandwiches, omelets, and pancakes.</pre>
 <figure><img src="https://pub-2e58c6df17c64bd492e25a414243b1b7.r2.dev/images/2023/06/screenshot-2023-06-02-at-6.22.24-pm.png" alt="Disappointment on the Map"><figcaption>Disappointment on the Map</figcaption></figure>
 <p>Not this one. This one didn't exist. Has never existed. Does not exist <em>and</em> has never existed. That church has been the only structure at that address (which isn't really the address of the church), ever. It was on a highway on-ramp. Making that turn to get to the church? Well, "Jesus take the wheel" would be a fine choice.</p>
 <p>I knew this was a possibility with ChatGPT. One of the first queries I did when ChatGPT was first released was "How do I land an airplane?" and there was a glaring mistake right away ("Point the nose of the plane at the ground"). So I was prepared and continued on to First Watch where I had a delicious Bananas Fosters French Toast with a side of Millionaire's Bacon.</p>
+<p class="bottom-nav"><a href="greedy-people.html">You are rightfully creeped out by greedy people selling snake oil. &rarr;</a></p>
 </main>
 
 <script>

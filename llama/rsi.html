@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="view-transition" content="same-origin">
 <title>Mighty Cheese | Repetitive Tasks</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,77 +15,91 @@
     font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
   }
   body {
-    padding: 6vh 8.4vw;
+    padding: 6vh 4.2vw 6vh 8.4vw;
     box-sizing: border-box;
   }
-  nav.back {
+  nav.sidebar {
     position: fixed;
-    top: 6vh;
+    top: 38vh;
     left: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
+    width: 22vw;
     font-size: 0.95rem;
-    overflow-wrap: break-word;
+    line-height: 1.55;
   }
-  nav.next {
-    position: fixed;
-    bottom: 6vh;
-    right: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
-    font-size: 0.95rem;
-    overflow-wrap: break-word;
-  }
-  nav.back a, nav.next a {
+  nav.sidebar a {
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
-  nav.back .prim-line, nav.next .prim-line {
-    display: block;
-  }
-  nav.back a:hover, nav.next a:hover {
+  nav.sidebar a:hover {
     text-decoration: underline;
   }
-  nav.back .sub-line, nav.next .sub-line {
+  nav.sidebar .current {
+    font-weight: 700;
+  }
+  nav.sidebar .title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.82em;
+    margin-bottom: 1.8em;
+  }
+  nav.sidebar .notablog {
+    display: block;
+    float: right;
+    margin-top: 2.4em;
+  }
+  nav.sidebar .byline {
+    display: block;
+    float: right;
+    clear: right;
     font-size: 0.85em;
     opacity: 0.7;
-    margin-top: 0.25em;
+    margin-top: 0.15em;
   }
-  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
-    color: #9bd4d6;
-    font-size: 1.18em;
+  nav.sidebar .prim-line {
+    display: block;
+    margin-bottom: 1.2em;
   }
-  nav.next { text-align: right; }
-  nav.next.mail {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.6rem;
-  }
-  nav.next.mail a {
-    display: inline-flex;
-    align-items: center;
-  }
-  nav.next.mail svg {
+  nav.sidebar svg {
+    display: block;
     width: 2.4rem;
     height: 2.4rem;
     stroke: currentColor;
     fill: none;
     stroke-width: 1.5;
     opacity: 0.85;
+    margin-top: 0.8em;
     transition: opacity 0.2s ease;
   }
-  nav.next.mail a:hover svg { opacity: 1; }
+  nav.sidebar a:hover svg { opacity: 1; }
   @media (max-width: 1100px) {
-    nav.back, nav.next {
+    nav.sidebar {
       position: static;
-      max-width: 38em;
+      width: auto;
       margin: 0 auto 2em;
+      max-width: 38em;
     }
-    nav.next { text-align: right; margin-top: -1em; }
   }
   main {
     max-width: 38em;
     margin: 0 auto;
+    margin-left: 25vw;
+  }
+  @media (max-width: 1100px) {
+    main {
+      margin-left: auto;
+    }
+  }
+  .bottom-nav {
+    text-align: right;
+    font-size: 0.95rem;
+    margin-top: 3em;
+  }
+  .bottom-nav a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .bottom-nav a:hover {
+    text-decoration: underline;
   }
   h1, h2 {
     font-family: 'Charmonman', 'Quicksand', cursive;
@@ -259,11 +274,30 @@
     font-size: 0.78em;
     opacity: 0.7;
   }
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: 0.4s ease-in both vt-fade-out;
+  }
+  ::view-transition-new(root) {
+    animation: 0.4s ease-out both vt-slide-from-right;
+  }
+  @keyframes vt-slide-from-right {
+    from { transform: translateX(100%); }
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; }
+  }
 </style>
 </head>
 <body>
-<nav class="back"><span class="prim-line">&larr; <a href="history.html">Know your history.</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
-<nav class="next"><span class="prim-line"><a href="mistakes.html">Llamas make mistakes</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
+<nav class="sidebar">
+  <a class="title" href="index.html">the llamas are not going to eat your lunch</a>
+  <a href="not-ai.html">It's not A.I.</a> <a href="not-a-luddite.html">You're not a luddite.</a> <a href="history.html">Know your history.</a> <span class="current">It is useful for non-creative, repetitive tasks.</span> <a href="mistakes.html">It will make terrible mistakes,</a> <a href="flying-llamas.html">so do you really want it flying a plane?</a> <a href="greedy-people.html">You are rightfully creeped out by greedy people selling snake oil.</a> <a href="caibal.html">(Resist the AI Cabal.)</a>
+  <a class="notablog" href="not-a-blog.html">Not a blog</a>
+  <span class="byline">by Colin Summers</span>
+</nav>
 <main>
 <h2>Repetitive Tasks</h2>
 <p>What percentage of our art, our culture, is Beatles, Dylan, Joni Mitchell, Jimi Hendrix? What fraction is the people who pole vault off the pieces of art that they consumed, flying into view with their souls bared? Because here is the secret that the AI cabal does not want you to know: the llamas will never contribute that.</p>
@@ -281,6 +315,7 @@
 <p>When I first started using that it felt like cheating. The next version of the Integrated Development Environment (IDE) had autocomplete on the built-in functions. No need to type <em>all</em> the characters for ArcTan, just 'a' 'r' and tab gave it to you. Again, totally cheating. The last time I was programming daily, the IDE not only knew the built in functions of the entire framework I was using, it knew all of the functions <strong>I</strong> had written myself. Totally crazy.</p>
 <p>Since February 1 2026 I have been using Anthropic's coding tool to write some code that I could write myself. It is, as Cory Doctorow says, "Spicy autocomplete." It has yet to do something that I cannot do myself. It does look things up to put things together faster than I have myself. I'd hope so. It stores a <em>lot</em> of knowledge about everything. Now that my brain is over six decades old I find that it stores less and less. The llamas make a <em>lot</em> of mistakes (see next section). I do not believe it even gets the work done any faster than I would get it done on my own, on a good day, with some ideal conditions, good references, and perhaps a friend to text if I forgot how to do something. (That's how I was doing it a year ago. I did fine.) It is a lot less typing for me. And I appear to be better at correcting someone else's mistakes than finding my own.</p>
 <p>If the caibal had focused on making these tools for coders, and for other repetitive, non-creative tasks, I would have no truck with them. But they are selling this as the next Industrial Revolution, which is a really heavy lift for auto-complete.</p>
+<p class="bottom-nav"><a href="mistakes.html">It will make terrible mistakes, &rarr;</a></p>
 </main>
 <template data-fn="cloud9">[Link to Cloud9 on Wikipedia, or Amazon to purchase it.]</template>
 <template data-fn="wilburys">George didn’t have a llama. He turned instead to friends Tom Petty, Jeff Lynne, Roy Orbison, and Bob Dylan to help him out. Apparently for one of the song writing days they were just reading the ad copy in magazines scattered on the coffee table in the living room. “Big refrigerator. Service charge. Long endurance.”</template>

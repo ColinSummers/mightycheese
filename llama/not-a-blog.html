@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="view-transition" content="same-origin">
 <title>Mighty Cheese | Not a Blog</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,77 +15,91 @@
     font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
   }
   body {
-    padding: 6vh 8.4vw;
+    padding: 6vh 4.2vw 6vh 8.4vw;
     box-sizing: border-box;
   }
-  nav.back {
+  nav.sidebar {
     position: fixed;
-    top: 6vh;
+    top: 38vh;
     left: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
+    width: 22vw;
     font-size: 0.95rem;
-    overflow-wrap: break-word;
+    line-height: 1.55;
   }
-  nav.next {
-    position: fixed;
-    bottom: 6vh;
-    right: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
-    font-size: 0.95rem;
-    overflow-wrap: break-word;
-  }
-  nav.back a, nav.next a {
+  nav.sidebar a {
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
-  nav.back .prim-line, nav.next .prim-line {
-    display: block;
-  }
-  nav.back a:hover, nav.next a:hover {
+  nav.sidebar a:hover {
     text-decoration: underline;
   }
-  nav.back .sub-line, nav.next .sub-line {
+  nav.sidebar .current {
+    font-weight: 700;
+  }
+  nav.sidebar .title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.82em;
+    margin-bottom: 1.8em;
+  }
+  nav.sidebar .notablog {
+    display: block;
+    float: right;
+    margin-top: 2.4em;
+  }
+  nav.sidebar .byline {
+    display: block;
+    float: right;
+    clear: right;
     font-size: 0.85em;
     opacity: 0.7;
-    margin-top: 0.25em;
+    margin-top: 0.15em;
   }
-  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
-    color: #faf6ed;
-    font-size: 1.18em;
+  nav.sidebar .prim-line {
+    display: block;
+    margin-bottom: 1.2em;
   }
-  nav.next { text-align: right; }
-  nav.next.mail {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.6rem;
-  }
-  nav.next.mail a {
-    display: inline-flex;
-    align-items: center;
-  }
-  nav.next.mail svg {
+  nav.sidebar svg {
+    display: block;
     width: 2.4rem;
     height: 2.4rem;
     stroke: currentColor;
     fill: none;
     stroke-width: 1.5;
     opacity: 0.85;
+    margin-top: 0.8em;
     transition: opacity 0.2s ease;
   }
-  nav.next.mail a:hover svg { opacity: 1; }
+  nav.sidebar a:hover svg { opacity: 1; }
   @media (max-width: 1100px) {
-    nav.back, nav.next {
+    nav.sidebar {
       position: static;
-      max-width: 38em;
+      width: auto;
       margin: 0 auto 2em;
+      max-width: 38em;
     }
-    nav.next { text-align: right; margin-top: -1em; }
   }
   main {
     max-width: 38em;
     margin: 0 auto;
+    margin-left: 25vw;
+  }
+  @media (max-width: 1100px) {
+    main {
+      margin-left: auto;
+    }
+  }
+  .bottom-nav {
+    text-align: right;
+    font-size: 0.95rem;
+    margin-top: 3em;
+  }
+  .bottom-nav a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .bottom-nav a:hover {
+    text-decoration: underline;
   }
   h1, h2 {
     font-family: 'Charmonman', 'Quicksand', cursive;
@@ -259,11 +274,25 @@
     font-size: 0.78em;
     opacity: 0.7;
   }
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: 0.4s ease-in both vt-fade-out;
+  }
+  ::view-transition-new(root) {
+    animation: 0.4s ease-out both vt-slide-from-right;
+  }
+  @keyframes vt-slide-from-right {
+    from { transform: translateX(100%); }
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; }
+  }
 </style>
 </head>
 <body>
-<nav class="back"><span class="prim-line">&larr; <a href="index.html">llamas</a></span></nav>
-<nav class="next mail"><a href="mailto:colin@mightycheese.com" title="Email me"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg></a><a href="llama-essays.pdf" title="Entire set as PDF" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6z" /><path d="M14 2v6h6" /><text x="12" y="17" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="6" font-weight="700" fill="currentColor" stroke="none">PDF</text></svg></a></nav>
+<nav class="sidebar"><span class="prim-line">&larr; <a href="index.html">llamas</a></span><a href="mailto:colin@mightycheese.com" title="Email me"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg></a><a href="llama-essays.pdf" title="Entire set as PDF" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6z" /><path d="M14 2v6h6" /><text x="12" y="17" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="6" font-weight="700" fill="currentColor" stroke="none">PDF</text></svg></a></nav>
 <main>
 <h2>Not a Blog</h2>
 <p>I was writing too much of this down, and sending too much of it to people in email (in reply to simple questions about 'AI'), so I wanted somewhere to park it. This is a moment in history that feels like it should have multiple viewpoints recorded and so I am putting mine, on this one tiny subject, here.</p>
@@ -271,7 +300,9 @@
 <p>The conclusions here were difficult to tie together. Splitting it into these separate pieces that tie back to the one paragraph feels most natural.</p>
 <p>So this is where I will note when there are updates, and where I might respond to a comment or two I get in email. We'll see.</p>
 <p>I imagine my audience is half a dozen people. But out of those there's certainly one (you know who you are) saying, "I want to read all this, but they say I can only bring <em>paper</em> to prison." No worries, there's a link to a PDF right there. See you on the other side.</p>
-<p class="dev-wc" hidden>7,130 words. v1.0<span class="file-counts"><span class="fc-n">1,244</span><span class="fc-t">It is not A.I.</span><span class="fc-n">318</span><span class="fc-t">You're not a Luddite</span><span class="fc-n">1,339</span><span class="fc-t">Know your history.</span><span class="fc-n">1,132</span><span class="fc-t">Repetitive Tasks</span><span class="fc-n">1,087</span><span class="fc-t">Llamas make mistakes</span><span class="fc-n">786</span><span class="fc-t">Flying Llamas</span><span class="fc-n">438</span><span class="fc-t">Greedy People are Selling Snake Oil</span><span class="fc-n">538</span><span class="fc-t">Resist the AI Cabal</span><span class="fc-n">248</span><span class="fc-t">Not a Blog</span></span></p>
+<p>June 15 2026: Changed the navigation through the material. My brother hated it before. That doesn't mean he won't hate this, but at least it is <em>different.</em> Added Zuck to the <a href="caibal.html">caibal</a>. And I have started to see people like Tim O'Reilly catch on to this whole thing, so I am considering an "other voices" page.</p>
+<p class="dev-wc" hidden>7,287 words. v1.0<span class="file-counts"><span class="fc-n">1,244</span><span class="fc-t">It is not A.I.</span><span class="fc-n">318</span><span class="fc-t">You're not a Luddite</span><span class="fc-n">1,339</span><span class="fc-t">Know your history.</span><span class="fc-n">1,132</span><span class="fc-t">Repetitive Tasks</span><span class="fc-n">1,087</span><span class="fc-t">Llamas make mistakes</span><span class="fc-n">786</span><span class="fc-t">Flying Llamas</span><span class="fc-n">438</span><span class="fc-t">Greedy People are Selling Snake Oil</span><span class="fc-n">639</span><span class="fc-t">Resist the AI Cabal</span><span class="fc-n">304</span><span class="fc-t">Not a Blog</span></span></p>
+
 </main>
 
 <script>

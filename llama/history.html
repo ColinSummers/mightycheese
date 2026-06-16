@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="view-transition" content="same-origin">
 <title>Mighty Cheese | Know your history.</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,77 +15,91 @@
     font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
   }
   body {
-    padding: 6vh 8.4vw;
+    padding: 6vh 4.2vw 6vh 8.4vw;
     box-sizing: border-box;
   }
-  nav.back {
+  nav.sidebar {
     position: fixed;
-    top: 6vh;
+    top: 38vh;
     left: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
+    width: 22vw;
     font-size: 0.95rem;
-    overflow-wrap: break-word;
+    line-height: 1.55;
   }
-  nav.next {
-    position: fixed;
-    bottom: 6vh;
-    right: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
-    font-size: 0.95rem;
-    overflow-wrap: break-word;
-  }
-  nav.back a, nav.next a {
+  nav.sidebar a {
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
-  nav.back .prim-line, nav.next .prim-line {
-    display: block;
-  }
-  nav.back a:hover, nav.next a:hover {
+  nav.sidebar a:hover {
     text-decoration: underline;
   }
-  nav.back .sub-line, nav.next .sub-line {
+  nav.sidebar .current {
+    font-weight: 700;
+  }
+  nav.sidebar .title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.82em;
+    margin-bottom: 1.8em;
+  }
+  nav.sidebar .notablog {
+    display: block;
+    float: right;
+    margin-top: 2.4em;
+  }
+  nav.sidebar .byline {
+    display: block;
+    float: right;
+    clear: right;
     font-size: 0.85em;
     opacity: 0.7;
-    margin-top: 0.25em;
+    margin-top: 0.15em;
   }
-  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
-    color: #9bd4d6;
-    font-size: 1.18em;
+  nav.sidebar .prim-line {
+    display: block;
+    margin-bottom: 1.2em;
   }
-  nav.next { text-align: right; }
-  nav.next.mail {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.6rem;
-  }
-  nav.next.mail a {
-    display: inline-flex;
-    align-items: center;
-  }
-  nav.next.mail svg {
+  nav.sidebar svg {
+    display: block;
     width: 2.4rem;
     height: 2.4rem;
     stroke: currentColor;
     fill: none;
     stroke-width: 1.5;
     opacity: 0.85;
+    margin-top: 0.8em;
     transition: opacity 0.2s ease;
   }
-  nav.next.mail a:hover svg { opacity: 1; }
+  nav.sidebar a:hover svg { opacity: 1; }
   @media (max-width: 1100px) {
-    nav.back, nav.next {
+    nav.sidebar {
       position: static;
-      max-width: 38em;
+      width: auto;
       margin: 0 auto 2em;
+      max-width: 38em;
     }
-    nav.next { text-align: right; margin-top: -1em; }
   }
   main {
     max-width: 38em;
     margin: 0 auto;
+    margin-left: 25vw;
+  }
+  @media (max-width: 1100px) {
+    main {
+      margin-left: auto;
+    }
+  }
+  .bottom-nav {
+    text-align: right;
+    font-size: 0.95rem;
+    margin-top: 3em;
+  }
+  .bottom-nav a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .bottom-nav a:hover {
+    text-decoration: underline;
   }
   h1, h2 {
     font-family: 'Charmonman', 'Quicksand', cursive;
@@ -259,11 +274,30 @@
     font-size: 0.78em;
     opacity: 0.7;
   }
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: 0.4s ease-in both vt-fade-out;
+  }
+  ::view-transition-new(root) {
+    animation: 0.4s ease-out both vt-slide-from-right;
+  }
+  @keyframes vt-slide-from-right {
+    from { transform: translateX(100%); }
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; }
+  }
 </style>
 </head>
 <body>
-<nav class="back"><span class="prim-line">&larr; <a href="not-a-luddite.html">You're not a Luddite</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
-<nav class="next"><span class="prim-line"><a href="rsi.html">Repetitive Tasks</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
+<nav class="sidebar">
+  <a class="title" href="index.html">the llamas are not going to eat your lunch</a>
+  <a href="not-ai.html">It's not A.I.</a> <a href="not-a-luddite.html">You're not a luddite.</a> <span class="current">Know your history.</span> <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a> <a href="mistakes.html">It will make terrible mistakes,</a> <a href="flying-llamas.html">so do you really want it flying a plane?</a> <a href="greedy-people.html">You are rightfully creeped out by greedy people selling snake oil.</a> <a href="caibal.html">(Resist the AI Cabal.)</a>
+  <a class="notablog" href="not-a-blog.html">Not a blog</a>
+  <span class="byline">by Colin Summers</span>
+</nav>
 <main>
 <h2>Know your history.</h2>
 <p>It is worth knowing a little bit about what you are being sold, what is (as of Apr 2026) one fifth of the United States economy.<sup class="fnref"><a href="#" data-fn="nasdaq" aria-label="footnote 1">1</a></sup> And the first thing to know is a little bit of context. I will be brutally brief, but I will include sources.<sup class="fnref"><a href="#" data-fn="wiki" aria-label="footnote 2">2</a></sup></p>
@@ -289,6 +323,7 @@
 <p>The folk tradition is how the <a href="greedy-people">greedy people</a> are training the llamas. They claim that because the machine doesn’t keep an exact copy of the work, it is not a violation of copyright.</p>
 <p>And the folk tradition is an illustration of <strong>what</strong> the llama is capable of: only interpolation, only an averaging of what it has been given, only yet another cover song. It is one reason that it is so convincing when it produces something ‘creative:’ it is a sort of creativity that we are used to seeing in our culture.</p>
 <p>And it is vital to remember that the vast, vast amount of data fed to the llamas is rife with errors. The llama, ‘learning’ from all of that, will happily repeat the errors just as it repeats the facts. It doesn’t know the difference.</p>
+<p class="bottom-nav"><a href="rsi.html">It is useful for non-creative, repetitive tasks. &rarr;</a></p>
 </main>
 <template data-fn="nasdaq">It looks like the 'A.I.' industry will be more than half of the NASDAQ index after the SpaceX IPO. They recently (Q1 2026) changed three rules to encourage the frontier A.I. labs to IPO on their exchange rather than elsewhere.</template>
 <template data-fn="wiki">My children will admonish me for using Wikipedia as a source, something they were not allowed to do even back in high school. It is <em>not</em> a primary source. And they are correct. But it is not bad for background and it has links to primary sources, you just need to do a little work.</template>

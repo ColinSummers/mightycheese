@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="view-transition" content="same-origin">
 <title>Mighty Cheese | __PAGE_TITLE__</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&family=Storyscript&display=swap" rel="stylesheet">
 <style>
@@ -95,6 +96,23 @@
   }
   .hint.visible { opacity: 0.85; }
   .hint.gone { opacity: 0; }
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: 0.4s ease-in both vt-slide-to-right;
+    z-index: 1;
+  }
+  ::view-transition-new(root) {
+    animation: 0.4s linear both vt-hold;
+    z-index: 0;
+  }
+  @keyframes vt-slide-to-right {
+    to { transform: translateX(100%); }
+  }
+  @keyframes vt-hold {
+    from, to { opacity: 1; }
+  }
   .version {
     margin-top: 0.2em;
     font-family: 'Quicksand', sans-serif;

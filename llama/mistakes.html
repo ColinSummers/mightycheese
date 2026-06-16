@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="view-transition" content="same-origin">
 <title>Mighty Cheese | Llamas make mistakes</title>
 <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,77 +15,91 @@
     font-family: 'Quicksand', 'Avenir Next', 'Avenir', system-ui, sans-serif;
   }
   body {
-    padding: 6vh 8.4vw;
+    padding: 6vh 4.2vw 6vh 8.4vw;
     box-sizing: border-box;
   }
-  nav.back {
+  nav.sidebar {
     position: fixed;
-    top: 6vh;
+    top: 38vh;
     left: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
+    width: 22vw;
     font-size: 0.95rem;
-    overflow-wrap: break-word;
+    line-height: 1.55;
   }
-  nav.next {
-    position: fixed;
-    bottom: 6vh;
-    right: 1.5vw;
-    max-width: calc(50vw - 19em - 2.5vw);
-    font-size: 0.95rem;
-    overflow-wrap: break-word;
-  }
-  nav.back a, nav.next a {
+  nav.sidebar a {
     color: inherit;
     text-decoration: none;
   }
-  nav.back > a, nav.next > a, nav.back .sub-line, nav.next .sub-line,
-  nav.back .prim-line, nav.next .prim-line {
-    display: block;
-  }
-  nav.back a:hover, nav.next a:hover {
+  nav.sidebar a:hover {
     text-decoration: underline;
   }
-  nav.back .sub-line, nav.next .sub-line {
+  nav.sidebar .current {
+    font-weight: 700;
+  }
+  nav.sidebar .title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.82em;
+    margin-bottom: 1.8em;
+  }
+  nav.sidebar .notablog {
+    display: block;
+    float: right;
+    margin-top: 2.4em;
+  }
+  nav.sidebar .byline {
+    display: block;
+    float: right;
+    clear: right;
     font-size: 0.85em;
     opacity: 0.7;
-    margin-top: 0.25em;
+    margin-top: 0.15em;
   }
-  nav.back .sub-line .ghost, nav.next .sub-line .ghost {
-    color: #9bd4d6;
-    font-size: 1.18em;
+  nav.sidebar .prim-line {
+    display: block;
+    margin-bottom: 1.2em;
   }
-  nav.next { text-align: right; }
-  nav.next.mail {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.6rem;
-  }
-  nav.next.mail a {
-    display: inline-flex;
-    align-items: center;
-  }
-  nav.next.mail svg {
+  nav.sidebar svg {
+    display: block;
     width: 2.4rem;
     height: 2.4rem;
     stroke: currentColor;
     fill: none;
     stroke-width: 1.5;
     opacity: 0.85;
+    margin-top: 0.8em;
     transition: opacity 0.2s ease;
   }
-  nav.next.mail a:hover svg { opacity: 1; }
+  nav.sidebar a:hover svg { opacity: 1; }
   @media (max-width: 1100px) {
-    nav.back, nav.next {
+    nav.sidebar {
       position: static;
-      max-width: 38em;
+      width: auto;
       margin: 0 auto 2em;
+      max-width: 38em;
     }
-    nav.next { text-align: right; margin-top: -1em; }
   }
   main {
     max-width: 38em;
     margin: 0 auto;
+    margin-left: 25vw;
+  }
+  @media (max-width: 1100px) {
+    main {
+      margin-left: auto;
+    }
+  }
+  .bottom-nav {
+    text-align: right;
+    font-size: 0.95rem;
+    margin-top: 3em;
+  }
+  .bottom-nav a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .bottom-nav a:hover {
+    text-decoration: underline;
   }
   h1, h2 {
     font-family: 'Charmonman', 'Quicksand', cursive;
@@ -259,13 +274,33 @@
     font-size: 0.78em;
     opacity: 0.7;
   }
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root) {
+    animation: 0.4s ease-in both vt-fade-out;
+  }
+  ::view-transition-new(root) {
+    animation: 0.4s ease-out both vt-slide-from-right;
+  }
+  @keyframes vt-slide-from-right {
+    from { transform: translateX(100%); }
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; }
+  }
 </style>
 </head>
 <body>
-<nav class="back"><span class="prim-line">&larr; <a href="rsi.html">Repetitive Tasks</a></span><span class="sub-line"><span class="ghost">&larr; </span><a href="index.html">llamas</a></span></nav>
-<nav class="next"><span class="prim-line"><a href="flying-llamas.html">Flying Llamas</a> &rarr;</span><span class="sub-line"><a href="not-a-blog.html">Not a blog</a><span class="ghost"> &rarr;</span></span></nav>
+<nav class="sidebar">
+  <a class="title" href="index.html">the llamas are not going to eat your lunch</a>
+  <a href="not-ai.html">It's not A.I.</a> <a href="not-a-luddite.html">You're not a luddite.</a> <a href="history.html">Know your history.</a> <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a> <span class="current">It will make terrible mistakes,</span> <a href="flying-llamas.html">so do you really want it flying a plane?</a> <a href="greedy-people.html">You are rightfully creeped out by greedy people selling snake oil.</a> <a href="caibal.html">(Resist the AI Cabal.)</a>
+  <a class="notablog" href="not-a-blog.html">Not a blog</a>
+  <span class="byline">by Colin Summers</span>
+</nav>
 <main>
 <h2>Llamas make mistakes</h2>
+<figure><img src="gemini-mistakes.png" alt="One of those statements is true."><figcaption>One of those statements is true.</figcaption></figure>
 <p>A lot. In general they hallucinate or incorrectly answer prompts 20% of the time.<sup class="fnref"><a href="#" data-fn="hallucination" aria-label="footnote 1">1</a></sup> That's a B average. To be sure, C's get degrees, just the same as A+ students, but if you are going to have someone driving you down the highway at 75mph, do you want the guy that got a B on his driving test? "What did a yield sign mean again? How am I meant to go around this traffic circle? Who has right of way here?" Ask five questions and it gets one wrong.</p>
 <p>My intention is <em>not</em> to collect mistakes that the llama spits out at us during this march toward disappointment. I am sure there are sites which are doing that, or there soon will be. Do you remember how hysterical all of the "Autocorrect Fail" sites were when autocorrect first hit our phones? So funny. A whole genre of humor.<sup class="fnref"><a href="#" data-fn="autocorrect" aria-label="footnote 2">2</a></sup> Someone can do that for LLMs, but it doesn't need to be me.</p>
 <p>(And a lot of the mistakes that the llamas make are not at all funny. Pretending to be a friend to a teenager, an LLM talked the unhappy youth into suicide.<sup class="fnref"><a href="#" data-fn="suicide" aria-label="footnote 3">3</a></sup> And an LLM was used to select targets during the Iran War and killed two hundred schoolgirls.<sup class="fnref"><a href="#" data-fn="target" aria-label="footnote 4">4</a></sup> Those are tragedies that someone should be held responsible for. Someone should also be collecting these, and all the data related to them, as well. For accountability, not laughs.)</p>
@@ -281,6 +316,7 @@
 <p>And CC had ignored the standard. To me this is emblematic of why llamas cannot replace real engineers. The rules for the headers were written in 1977. It is accurate to say that they are <em>foundational</em> to the Internet. Really, I think, to modern software at large. Ignoring it is saying, "There is nothing fundamental that I know or follow." Was it a mistake? Yes, but it was a mistake like getting onto the highway going in reverse is a mistake. It demonstrates a basic incompatibility with how things are meant to be done. How they will get done. How <em>anything</em> works.</p>
 <p>If you look in the paragraphs above there is a place I used an em-dash when writing out 'x-header.' It is very unlikely you noticed. But to a computer 'x-header' and 'x–header' are impossibly different. It cannot accept the second. And the llama ignoring that shows that it doesn't have any basic understanding of how computers, which has to include itself, work. Or, if it does somehow contain that knowledge, it ignored it. It discarded that knowledge at a time when keeping it in mind would have made the code work and forgetting it would cost time and energy chasing a stupid bug.</p>
 <p>So now I am a stupid manager of a stupid coding engineer. This is not the dream I was sold. But, at least I know why it happens. It's not like I'm going to let it fly an airplane.</p>
+<p class="bottom-nav"><a href="flying-llamas.html">so do you really want it flying a plane? &rarr;</a></p>
 </main>
 <template data-fn="hallucination">"LLM Hallucination Statistics 2026: AI Gets Facts Wrong Up to 82% of the Time." <a href="https://sqmagazine.co.uk/llm-hallucination-statistics/" target="_blank">SQ Magazine, 2026</a>  <em>and</em> "Hallucination Leaderboard: Comparing LLM Performance at Producing Hallucinations when Summarizing Short Documents." <a href="https://github.com/vectara/hallucination-leaderboard" target="_blank">GitHub, 2024–2026</a>  <em>and</em> Kalai, Adam Tauman, Ofir Nachum, Santosh Vempala, and Edwin Zhang. "Why Language Models Hallucinate." <a href="https://openai.com/index/why-language-models-hallucinate/" target="_blank">OpenAI, September 4, 2025</a>.</template>
 <template data-fn="autocorrect"><a href="https://thunderdungeon.com/2024/01/11/funny-autocorrect-fails/" target="_blank">Autocorrect Fails</a></template>
