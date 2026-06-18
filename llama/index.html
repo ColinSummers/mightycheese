@@ -26,7 +26,11 @@
   main {
     width: 100%;
     max-width: 1400px;
-    margin: auto;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   h1 {
     font-family: 'Charmonman', 'Quicksand', cursive;
@@ -66,9 +70,7 @@
     text-underline-offset: 0.08em;
   }
   .bottomright {
-    position: absolute;
-    right: 6vw;
-    bottom: 3vh;
+    align-self: flex-end;
     text-align: right;
     color: #b04a2a;
   }
@@ -139,7 +141,7 @@
 </main>
 <div class="bottomright">
   <a class="notablog" href="not-a-blog.html">Not a blog by Colin Summers</a>
-  <div class="version">v1.0 Jun 15 2026</div>
+  <div class="version">v1.0 Jun 18 2026</div>
 </div>
 <script>
   window.addEventListener('load', () => {
