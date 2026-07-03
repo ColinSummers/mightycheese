@@ -453,11 +453,27 @@ def build(md_path: Path, order: list[str],
 
     body_html, fn_order = render_body(body_src)
 
-    fn_blocks = "\n".join(
-        f'<template data-fn="{html.escape(k)}">{inline(defs[k])}</template>'
-        for k in fn_order
-        if k in defs
-    )
+    fn_parts: list[str] = []
+    for k in fn_order:
+        if k not in defs:
+            continue
+        val = defs[k].strip()
+        if val.endswith(".md"):
+            fn_file = LLAMA / val
+            if fn_file.exists():
+                raw = fn_file.read_text(encoding="utf-8")
+                paras = [p.strip() for p in re.split(r"\n\s*\n", raw) if p.strip()]
+                content = "\n".join(f"<p>{inline(p.replace(chr(10), ' '))}</p>" for p in paras)
+                fn_parts.append(
+                    f'<template data-fn="{html.escape(k)}" data-fn-panel>{content}</template>'
+                )
+            else:
+                print(f"  {md_path.name}: [^{k}] references {val} but file not found", file=sys.stderr)
+        else:
+            fn_parts.append(
+                f'<template data-fn="{html.escape(k)}">{inline(val)}</template>'
+            )
+    fn_blocks = "\n".join(fn_parts)
 
     title = first_heading(src)
     stem = md_path.stem

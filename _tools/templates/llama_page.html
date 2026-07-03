@@ -220,6 +220,59 @@
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;
   }
+  #fnpanel-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 24, 16, 0.45);
+    z-index: 20;
+  }
+  #fnpanel-backdrop[hidden] { display: none; }
+  #fnpanel {
+    position: fixed;
+    top: 5vh;
+    right: 4vw;
+    width: min(560px, 88vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #f5e6c5;
+    color: #2b1810;
+    padding: 2em 2.2em 2.4em;
+    border-radius: 8px;
+    box-shadow: 0 12px 44px rgba(43, 24, 16, 0.35);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.6;
+    z-index: 21;
+  }
+  #fnpanel[hidden] { display: none; }
+  #fnpanel p {
+    margin: 0 0 1em 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  #fnpanel p:last-child { margin-bottom: 0; }
+  #fnpanel a {
+    color: #8a3324;
+    text-decoration: none;
+  }
+  #fnpanel a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+  #fnpanel-close {
+    position: sticky;
+    top: 0;
+    float: right;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #2b1810;
+    cursor: pointer;
+    opacity: 0.5;
+    padding: 0 0 0.3em 0.5em;
+    line-height: 1;
+  }
+  #fnpanel-close:hover { opacity: 1; }
   .starter-chart { font-size: 0.85rem; line-height: 1.35; }
   .starter-pie { display: block; margin: 0 auto 0.9em; }
   .starter-legend {
@@ -305,6 +358,17 @@ __FOOTNOTES__
   popup.hidden = true;
   document.body.appendChild(popup);
 
+  const backdrop = document.createElement('div');
+  backdrop.id = 'fnpanel-backdrop';
+  backdrop.hidden = true;
+  document.body.appendChild(backdrop);
+  const panel = document.createElement('div');
+  panel.id = 'fnpanel';
+  panel.hidden = true;
+  document.body.appendChild(panel);
+
+  function closePanel() { backdrop.hidden = true; panel.hidden = true; }
+
   document.addEventListener('click', (e) => {
     const ref = e.target.closest('.fnref a');
     if (ref) {
@@ -312,6 +376,14 @@ __FOOTNOTES__
       const key = ref.dataset.fn;
       const tpl = document.querySelector('template[data-fn="' + key + '"]');
       if (!tpl) return;
+      if (tpl.hasAttribute('data-fn-panel')) {
+        panel.innerHTML = '<button id="fnpanel-close" aria-label="Close">&times;</button>' + tpl.innerHTML;
+        panel.hidden = false;
+        backdrop.hidden = false;
+        panel.scrollTop = 0;
+        popup.hidden = true;
+        return;
+      }
       popup.innerHTML = tpl.innerHTML;
       popup.hidden = false;
       const rect = ref.getBoundingClientRect();
@@ -324,11 +396,12 @@ __FOOTNOTES__
       popup.style.top = (rect.bottom + window.scrollY + 8) + 'px';
       return;
     }
+    if (e.target.closest('#fnpanel-close') || e.target === backdrop) { closePanel(); return; }
     if (!e.target.closest('#fnpop')) popup.hidden = true;
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') popup.hidden = true;
+    if (e.key === 'Escape') { popup.hidden = true; closePanel(); }
   });
 </script>
 <script data-goatcounter="https://colinsummers.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

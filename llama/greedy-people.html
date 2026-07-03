@@ -220,6 +220,59 @@
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;
   }
+  #fnpanel-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 24, 16, 0.45);
+    z-index: 20;
+  }
+  #fnpanel-backdrop[hidden] { display: none; }
+  #fnpanel {
+    position: fixed;
+    top: 5vh;
+    right: 4vw;
+    width: min(560px, 88vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #f5e6c5;
+    color: #2b1810;
+    padding: 2em 2.2em 2.4em;
+    border-radius: 8px;
+    box-shadow: 0 12px 44px rgba(43, 24, 16, 0.35);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.6;
+    z-index: 21;
+  }
+  #fnpanel[hidden] { display: none; }
+  #fnpanel p {
+    margin: 0 0 1em 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  #fnpanel p:last-child { margin-bottom: 0; }
+  #fnpanel a {
+    color: #8a3324;
+    text-decoration: none;
+  }
+  #fnpanel a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+  #fnpanel-close {
+    position: sticky;
+    top: 0;
+    float: right;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #2b1810;
+    cursor: pointer;
+    opacity: 0.5;
+    padding: 0 0 0.3em 0.5em;
+    line-height: 1;
+  }
+  #fnpanel-close:hover { opacity: 1; }
   .starter-chart { font-size: 0.85rem; line-height: 1.35; }
   .starter-pie { display: block; margin: 0 auto 0.9em; }
   .starter-legend {
@@ -294,7 +347,7 @@
 <body>
 <nav class="sidebar">
   <a class="title" href="index.html">the llamas are not going to eat your lunch</a>
-  <a href="not-ai.html">It's not A.I.</a> <a href="not-a-luddite.html">You're not a luddite.</a> <a href="history.html">Know your history.</a> <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a> <a href="mistakes.html">It will make terrible mistakes,</a> <a href="flying-llamas.html">so do you really want it flying a plane?</a> <span class="current">You are rightfully creeped out by greedy people selling snake oil.</span> <a href="caibal.html">(Resist the AI Cabal.)</a>
+  <a href="not-ai.html">It's not A.I.</a> <a href="not-a-luddite.html">You're not a luddite.</a> <a href="history.html">Know your history.</a> <a href="rsi.html">It is useful for non-creative, repetitive tasks.</a> <a href="mistakes.html">It will make terrible mistakes,</a> <a href="flying-llamas.html">so do you really want it flying a plane?</a> <span class="current">You are rightfully creeped out by greedy people selling snake oil.</span> <a href="caibal.html">(Resist the AI Cabal.</a> <a href="others.html">Other people are.)</a>
   <a class="notablog" href="not-a-blog.html">Not a blog</a>
   <span class="byline">by Colin Summers</span>
 </nav>
@@ -308,7 +361,7 @@
 <p>You've read your <a href="history">history</a> so you know about <a href="https://en.wikipedia.org/wiki/Rob_Pike" target="_blank">rob pike</a>. You might wonder how the person who birthed Mark V Shaney feels about ChatGPT, Claude, Gemini and the rest. Wonder no more.</p>
 <figure><img src="rob-claude.jpeg" alt="Posted on BlueSky Dec 26 2025"><figcaption>Posted on BlueSky Dec 26 2025</figcaption></figure>
 <p>It is <em>only</em> greed that is motivating them. They all own monster yachts and private jets and worry that the other guy is going to get a bigger yacht and more jets. Any one of them could stop and solve any of the tough problems facing the global population, instead of claiming they are going to 'put artificial general intelligence in the hands of every person.' No, they are not. They are just chasing military industrial complex piles of money because they are scared a competitor is going to grab them first.</p>
-<p class="bottom-nav"><a href="caibal.html">(Resist the AI Cabal.) &rarr;</a></p>
+<p class="bottom-nav"><a href="caibal.html">(Resist the AI Cabal. &rarr;</a></p>
 </main>
 <template data-fn="parrots">Bender, E. M., Gebru, T., McMillan-Major, A., & Shmitchell, S. (2021). <a href="https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf" target="_blank">On the dangers of stochastic parrots: Can language models be too big?</a> Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency, 610–623.</template>
 <script>
@@ -318,6 +371,17 @@
   popup.hidden = true;
   document.body.appendChild(popup);
 
+  const backdrop = document.createElement('div');
+  backdrop.id = 'fnpanel-backdrop';
+  backdrop.hidden = true;
+  document.body.appendChild(backdrop);
+  const panel = document.createElement('div');
+  panel.id = 'fnpanel';
+  panel.hidden = true;
+  document.body.appendChild(panel);
+
+  function closePanel() { backdrop.hidden = true; panel.hidden = true; }
+
   document.addEventListener('click', (e) => {
     const ref = e.target.closest('.fnref a');
     if (ref) {
@@ -325,6 +389,14 @@
       const key = ref.dataset.fn;
       const tpl = document.querySelector('template[data-fn="' + key + '"]');
       if (!tpl) return;
+      if (tpl.hasAttribute('data-fn-panel')) {
+        panel.innerHTML = '<button id="fnpanel-close" aria-label="Close">&times;</button>' + tpl.innerHTML;
+        panel.hidden = false;
+        backdrop.hidden = false;
+        panel.scrollTop = 0;
+        popup.hidden = true;
+        return;
+      }
       popup.innerHTML = tpl.innerHTML;
       popup.hidden = false;
       const rect = ref.getBoundingClientRect();
@@ -337,11 +409,12 @@
       popup.style.top = (rect.bottom + window.scrollY + 8) + 'px';
       return;
     }
+    if (e.target.closest('#fnpanel-close') || e.target === backdrop) { closePanel(); return; }
     if (!e.target.closest('#fnpop')) popup.hidden = true;
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') popup.hidden = true;
+    if (e.key === 'Escape') { popup.hidden = true; closePanel(); }
   });
 </script>
 <script data-goatcounter="https://colinsummers.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
