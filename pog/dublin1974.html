@@ -6,6 +6,34 @@
   <title>Mighty Cheese | Dublin 1974</title>
   <meta name="author" content="Colin Summers" />
   <link rel="stylesheet" href="../style.css" />
+  <style>
+    .slideshow-controls {
+      margin: 0 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .slideshow-controls a,
+    .slideshow-controls button {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--gold-dark);
+      color: var(--white);
+      text-decoration: none;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .slideshow-controls a:hover,
+    .slideshow-controls button:hover {
+      background: var(--gold);
+    }
+    .slideshow-counter {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+  </style>
 </head>
 <body>
   <nav class="navbar">
@@ -23,6 +51,12 @@
   <main>
 <h2><a href="./">pog</a> | Dublin 1974</h2>
 <p>Contact sheet photos from Dublin, 1974.</p>
+
+<div class="slideshow-controls">
+  <a href="#img-1" id="slideshow-start">Start Slideshow</a>
+  <button id="slideshow-stop" style="display:none">Stop</button>
+  <span class="slideshow-counter" id="slideshow-counter"></span>
+</div>
 
 <div class="gallery-grid">
   <a href="#img-1"><img src="dublin1974/001.jpg" alt="Dublin 1974" /></a>
@@ -1313,5 +1347,55 @@
     <p>Copyright Colin Summers 2006 and other years.</p>
   </footer>
 <script data-goatcounter="https://colinsummers.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+(function() {
+  var total = 128;
+  var timer = null;
+  var startBtn = document.getElementById('slideshow-start');
+  var stopBtn = document.getElementById('slideshow-stop');
+  var counter = document.getElementById('slideshow-counter');
+
+  function currentImg() {
+    var h = location.hash;
+    var m = h.match(/^#img-(\d+)$/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+
+  function advance() {
+    var cur = currentImg();
+    if (cur >= total) {
+      stop();
+      return;
+    }
+    location.hash = '#img-' + (cur + 1);
+    counter.textContent = (cur + 1) + ' / ' + total;
+  }
+
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+    stopBtn.style.display = 'none';
+    startBtn.style.display = '';
+    counter.textContent = '';
+  }
+
+  startBtn.addEventListener('click', function(e) {
+    if (timer) return;
+    startBtn.style.display = 'none';
+    stopBtn.style.display = '';
+    counter.textContent = '1 / ' + total;
+    timer = setInterval(advance, 8000);
+  });
+
+  stopBtn.addEventListener('click', function() {
+    stop();
+    location.hash = '#_';
+  });
+
+  window.addEventListener('hashchange', function() {
+    if (timer && currentImg() === 0) stop();
+  });
+})();
+</script>
 </body>
 </html>
